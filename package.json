@@ -1,0 +1,10 @@
+{
+  "name": "j-kompact",
+  "author": "Jundi",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
