@@ -1,3 +1,5 @@
+import { log, wait } from './Dynamic.ts'
+
 export const Break = 'BREAK'
 
 /**
@@ -59,8 +61,8 @@ export function retry<T>(func: () => void | T, options: {
                     return fallback
                 throw e
             }
-            console.log(`Retry ${attempt}/${attempts}: ${e.message}`)
-            Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, attempt * waitingInSec * 1000)
+            log(`Retry ${attempt}/${attempts}: ${e.message}`)
+            wait(attempt * waitingInSec)
         }
     }
 }

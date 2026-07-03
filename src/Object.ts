@@ -1,222 +1,177 @@
-import { isAllArray, isArray, type MLArray } from './Array.ts'
-import { Object } from '../global'
+import { getOptions, initArray, isAllArray, isArray, type MLArray } from './Array.ts'
+import { initString } from './String.ts'
+import { mlArray, mlObject } from './Type.ts'
+
+type mlObjectCallbackFunction<T, U> = (key: string, value: T) => U
+type CustomMLClass = typeof mlObject | typeof mlArray
 
 /**
  *  ML: MASTER LIBRARY
- *  @template T
  */
 export class MLObject<T> {
-    object: Object = {}
+  [key: string]: any
 
-    static fromEntries<T>(entries: Iterable<readonly [PropertyKey, any]>) {
-        return new this(Object.fromEntries(entries))
-    }
+  object: Record<string, T> = {}
+  entriesVersion: MLArray<Array<string | T>> | undefined
+  keysVersion: MLArray<string> = initArray()
+  valuesVersion: MLArray<T> = initArray()
 
-    static assign<T>(values: MLArray<T>): MLObject<T> {
-        const result = {}
-        values.iterate((data: T) => Object.assign(result, data))
-        return new this(result)
-    }
+  static fromEntries<T>(entries: Iterable<readonly [PropertyKey, any]>) {
+    return new this(Object.fromEntries(entries))
+  }
 
-    constructor(object: Object) {
-        this.add(object)
-    }
+  static assign<T>(values: MLArray<T>): MLObject<T> {
+    const result = {}
+    values.iterate((data: T) => Object.assign(result, data))
+    return new this(result)
+  }
 
-    /**
-     * Membalikkan { key: value } di Object menjadi { value: key }
-     * @return {MLObject<T, string>}
-     */
-    reverse() {
-        return this.reEntries((key, value) => [value, key])
-    }
+  constructor(object: Record<string, T>) {
+    this.add(object)
+  }
 
-    /**
-     * @return {MLArray<[string, T]>}
-     */
-    entries() {
-        if (!this.entriesVersion)
-            this.entriesVersion = initArray(Object.entries(this.object))
-        return this.entriesVersion
-    }
+  /**
+   * Membalikkan { key: value } di Object menjadi { value: key }
+   */
+  reverse() {
+    return this.reEntries((key: string, value: T) => [value, key])
+  }
 
-    /**
-     * @param {(key: string, value: T) => [string, T]|boolean} callbackFunc
-     * @return {MLObject<string,T>}
-     */
-    reEntries(callbackFunc) {
-        return MLObject.fromEntries(this.map(callbackFunc))
-    }
+  entries() {
+    if (!this.entriesVersion)
+      this.entriesVersion = initArray(Object.entries(this.object)) as MLArray<[string, T]>
+    return this.entriesVersion
+  }
 
-    /**
-     * @param {(key: string, value: T) => [string, T][]|any} func
-     */
-    forEach(func) {
-        this.entries().forEach(([key, value]) => func(key, value))
-    }
+  reEntries<U>(callbackFunc: mlObjectCallbackFunction<T, U>): MLObject<U> {
+    return MLObject.fromEntries(this.map(callbackFunc) as [string, T][]) as MLObject<U>
+  }
 
-    /**
-     * @param {(key: string, value: T) => [string, T][]|any} func
-     * @return {[string, T][]|any}
-     */
-    map(func) {
-        return this.entries().map(([key, value]) => func(key, value))
-    }
+  forEach<U>(func: mlObjectCallbackFunction<T, U>) {
+    this.entries().forEach(([key, value]) => func(key as string, value as T))
+  }
 
-    /**
-     * @param {(key: string, value: T) => boolean} func
-     * @return {MLObject}
-     */
-    filter(func) {
-        return MLObject.fromEntries(this.entries().immutableFilter(([key, value]) => func(key, value)))
-    }
+  map<U>(func: mlObjectCallbackFunction<T, U>) {
+    return this.entries().map(([key, value]) => func(key as string, value as T))
+  }
 
-    /**
-     * Mendapatkan nilai berdasarkan key (bisa banyak) dari suatu object
-     * @param {string|{isDeleteNull: boolean}} keys
-     * @return {T|MLArray<T>}
-     */
-    get(...keys) {
-        const { isDeleteNull = false } = getOptions(keys),
-            mLArrayKeys = initArray(keys, { flatting: true })
-        /**
-         * @param {string} key
-         * @return {*}
-         */
-        const process = key => this[key]
-        if (mLArrayKeys.length > 1) {
-            const result = mLArrayKeys.map(process)
-            return isDeleteNull
-                ? result.deleteNull()
-                : result
-        }
-        return process(mLArrayKeys[0])
-    }
+  filter(func: mlObjectCallbackFunction<T, boolean>) {
+    return MLObject.fromEntries(this.entries().immutableFilter(([key, value]: any) => func(key, value)) as MLArray<[string, T]>)
+  }
 
-    /**
-     * @return {MLArray<string>}
-     */
-    keys() {
-        if (!this.keysVersion.length)
-            this.keysVersion = MLArray.init(Object.keys(this.object))
-        return this.keysVersion
+  /**
+   * Mendapatkan nilai berdasarkan key (bisa banyak) dari suatu object
+   */
+  get(...keys: string[] | [{ isDeleteNull: boolean }]) {
+    const { isDeleteNull = false } = getOptions(keys),
+      mLArrayKeys = initArray(keys as string[], { flatting: true }),
+      process = (key: string) => this[key] as T
+    if (mLArrayKeys.length > 1) {
+      const result = mLArrayKeys.map(process) as unknown as MLArray<T>
+      return isDeleteNull
+        ? result.deleteNull()
+        : result
     }
+    return process(mLArrayKeys[0]!)
+  }
 
-    /**
-     * @return {MLArray<T>}
-     */
-    values() {
-        if (!this.valuesVersion.length)
-            this.valuesVersion = MLArray.init(Object.values(this.object))
-        return this.valuesVersion
-    }
+  keys() {
+    if (!this.keysVersion?.length)
+      this.keysVersion = initArray(Object.keys(this.object))
+    return this.keysVersion
+  }
 
-    /**
-     * @param {T} values
-     * @return {MLString|MLString[]}
-     */
-    getKeyByValue(...values) {
-        values = values.lazyFlat()
-        const result = this.filter((key, value) => values.includes(value)).map(key => initString(key))
-        return result.length > 1 ? result : result[0]
-    }
+  values() {
+    if (!this.valuesVersion.length)
+      this.valuesVersion = initArray(Object.values(this.object))
+    return this.valuesVersion
+  }
 
-    /**
-     * @param {string|string[]} keys
-     */
-    delete(...keys) {
-        initArray(keys, { flatting: true })
-            .iterate(key => {
-                delete this.object[key]
-                delete this[key]
-            })
-        return this.reset()
-    }
+  getKeyByValue(...values: T[]) {
+    values = values.lazyFlat()
+    const result = this.filter((key, value) => values.includes(value)).map(key => initString(key))
+    return result.length > 1 ? result : result[0]
+  }
 
-    reset() {
-        this.entriesVersion = null
-        this.keysVersion = []
-        this.valuesVersion = []
-        return this
-    }
+  delete(...keys: string[]) {
+    initArray(keys, { flatting: true })
+      .iterate((key: string) => {
+        delete this.object[key]
+        delete this[key]
+      })
+    return this.reset()
+  }
 
-    /**
-     * @param {string|string[]|MLArray<string>|MLObject<string, T>} keys
-     * @param {T|T[]|MLArray<T>|null} values
-     */
-    set(keys, values = null) {
-        if (keys instanceof MLObject)
-            keys.forEach((key, value) => this.object[key] = this[key] = value)
-        else {
-            [keys, values] = [initArray(keys), initArray(values)]
-            keys.iterate((data, no) => this.object[data] = this[data] = values[no])
-        }
-        return this.reset()
-    }
+  reset() {
+    this.entriesVersion = undefined
+    this.keysVersion = initArray()
+    this.valuesVersion = initArray()
+    return this
+  }
 
-    /**
-     * @param {mlArray|string} type
-     * @return {MLObject<string, MLArray>}
-     */
-    convertValueAs(type) {
-        switch (type) {
-            case mlArray:
-                return this.reEntries((key, value) => [key, initArray(value)])
-        }
+  set(keys: string | string[] | MLArray<string> | MLObject<T>, values: T | T[] | MLArray<T> | null = null) {
+    if (keys instanceof MLObject)
+      keys.forEach((key, value) => this.object[key] = this[key] = value)
+    else {
+      const [keysWrapped, valuesWrapped] = [initArray(keys), initArray(values)]
+      keysWrapped.iterate((data: string, no: number) => this.object[data] = this[data] = valuesWrapped[no] as T)
     }
+    return this.reset()
+  }
 
-    /**
-     * @param {Object|MLObject} otherObject
-     */
-    add(otherObject) {
-        if (otherObject)
-            otherObject = otherObject.object
-        this.object = otherObject
-        this.reset()
-        this.forEach((key, value) => {
-            if (!(key in this))
-                this[key] = value
-        })
+  convertValueAs(type: CustomMLClass) {
+    switch (type) {
+      case mlArray:
+        return this.reEntries((key, value) => [key, initArray(value)])
     }
+  }
+
+  add(otherObject: Record<string, T> | MLObject<T>) {
+    if (otherObject instanceof MLObject)
+      otherObject = otherObject.object
+    this.object = otherObject
+    this.reset()
+    this.forEach((key, value) => {
+      if (!(key in this))
+        this[key] = value
+    })
+  }
 }
 
-/**
- * @param {Object} object
- * @return {MLObject}
- */
-export function initObject(object = {}) {
-    return new MLObject(object)
+export function initObject<T>(object: Record<string, T> = {}) {
+  return new MLObject(object) as MLObject<T>
 }
 
 /**
  * Cek apakah sebuah nilai merupakan objek plain / MLObject, bukan array dan bukan null
  */
 export function isObject(...values: any[]) {
-    return values.every(value => value && (typeof value === 'object' || value instanceof MLObject) && !isArray(value))
+  return values.every(value => value && (typeof value === 'object' || value instanceof MLObject) && !isArray(value))
 }
 
 /**
  * Cek apakah sebuah objek kosong atau tidak
  */
-export function isEmpty<T>(object: Object<string, T>) {
-    return !(!!Object.keys(object).length)
+export function isEmpty<T>(object: Record<string, T>) {
+  return !(!!Object.keys(object).length)
 }
 
 /**
  * Parsing dari tipe data apapun ke dalam bentuk Object
  */
-export function parse<T>(param: Object<string, T>[] | Iterable<readonly [PropertyKey, any]> | string): Object<string, T> {
-    if (typeof param === 'string')
-        return JSON.parse(param)
-    if (isAllArray(...param))
-        return Object.fromEntries(param as Iterable<readonly [PropertyKey, any]>)
-    return Object.assign({}, ...param)
+export function parse<T>(param: Record<string, T>[] | Iterable<readonly [PropertyKey, any]> | string): Record<string, T> {
+  if (typeof param === 'string')
+    return JSON.parse(param)
+  if (isAllArray(...param))
+    return Object.fromEntries(param as Iterable<readonly [PropertyKey, any]>)
+  return Object.assign({}, ...param)
 }
 
 /**
  * Melakukan konversi MLObject ke Object native JavaScrit
  */
 export function toJSObject(value: any): Object {
-    if (isArray(value)) return value.map(toJSObject)
-    if (value instanceof MLObject) return value.object
-    return value
+  if (isArray(value)) return value.map(toJSObject)
+  if (value instanceof MLObject) return value.object
+  return value
 }

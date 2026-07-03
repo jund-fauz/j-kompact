@@ -1,15 +1,21 @@
-var Capitalize = 'capitalize',
+import { And, Or } from './Type.ts'
+import { getOptions } from './Array.ts'
+
+const
+  Capitalize = 'capitalize',
   LowerCase = 'lowercase',
   UpperCase = 'uppercase'
 
-class MLString extends String {
+type NormalizeMode = typeof Capitalize | typeof LowerCase | typeof UpperCase
+type Logic = typeof And | typeof Or
+
+export class MLString<T extends string = string> extends String {
+  readonly _literalType!: T
+
   toJSON() {
     return this.toString()
   }
 
-  /**
-   * @return {MLString}
-   */
   toCamelCase() {
     return initString(
       this
@@ -20,15 +26,11 @@ class MLString extends String {
     )
   }
 
-  /**
-   * @param {Capitalize|LowerCase|UpperCase|string} mode
-   * @return {MLString}
-   */
-  normalizeFromCamelCase(mode = Capitalize) {
+  normalizeFromCamelCase(mode: NormalizeMode = Capitalize) {
     const result = this.replace(/[A-Z]/g, ' $&')
     switch (mode) {
       case Capitalize:
-        return initString(result).capitalize(result)
+        return initString(result).capitalize()
       case LowerCase:
         return initString(result.toLowerCase())
       case UpperCase:
@@ -36,73 +38,50 @@ class MLString extends String {
     }
   }
 
-  /**
-   * @return {MLString}
-   */
   capitalize() {
-    return initString(this[0].toUpperCase() + this.slice(1).toLowerCase())
+    return this.length ? initString(this[0]!.toUpperCase() + this.slice(1).toLowerCase()) : ''
   }
 
   /**
-   * Mengecek apakah suatu teks ada di dalam teks lain
-   * @param {string[]|{logic?: And|Or|string}} searchValues
-   * @return {boolean}
+   * Mengecek apakah suatu teks ada di dalam teks-teks lain
    */
-  includes(...searchValues) {
+  override includes(...searchValues: string[] | { logic?: Logic }[]): boolean
+
+  override includes(string: string, position?: number): boolean
+
+  override includes(...searchValues: any[]) {
     const { logic = And } = getOptions(searchValues),
-      process = searchValue => super.includes(searchValue)
+      process = (searchValue: string) => super.includes(searchValue)
     searchValues = searchValues.lazyFlat()
     return logic === And
       ? searchValues.every(process)
       : searchValues.some(process)
   }
 
-  /**
-   * @param {string|{logic?: And|Or|string, caseInsensitive?: boolean}} searchValues
-   * @return {boolean}
-   */
-  endWith(...searchValues) {
+  endWith(...searchValues: string[] | [{ logic?: Logic, caseInsensitive?: boolean }]) {
     const { logic = And, caseInsensitive = false } = getOptions(searchValues),
-      process = searchValue => caseInsensitive ? this.toLowerCase().endsWith(searchValue.toLowerCase()) : this.endsWith(searchValue)
-    searchValues = searchValues.lazyFlat()
+      process = (searchValue: string) => caseInsensitive ? this.toLowerCase().endsWith(searchValue.toLowerCase()) : this.endsWith(searchValue)
+    const flattenSearchValues = searchValues.lazyFlat() as string[]
     return logic === And
-      ? searchValues.every(process)
-      : searchValues.some(process)
+      ? flattenSearchValues.every(process)
+      : flattenSearchValues.some(process)
   }
 
-  /**
-   * @param {number} digitCount
-   * @return {string}
-   */
-  formatNumber(digitCount = 2) {
+  formatNumber(digitCount: number = 2) {
     return this.padStart(digitCount, '0')
   }
 }
 
-/**
- * @param {*} value
- * @return {MLString}
- */
-function initString(value) {
+export function initString<const T = string>(value: T): MLString<T extends string ? T : string> {
   return new MLString(value)
 }
 
-/**
- * @param {number} number
- * @param {number} digitCount
- * @return {string}
- */
-function formatNumber(number, digitCount = 2) {
-  return initString(number).formatNumber(digitCount)
-}
+export const toString = JSON.stringify
 
-/**
- * @param {Object|Object[]} param
- */
-function toString(param) {
-  return JSON.stringify(param)
-}
-
-function isString(value) {
+export function isString(value: any) {
   return typeof value === 'string' || value instanceof String
+}
+
+export function formatNumber(number: number, digitCount: number = 2) {
+  return initString(number).formatNumber(digitCount)
 }

@@ -1,5 +1,10 @@
-import type { MLObject } from './src/Object.ts'
+import type { MLArray } from './src/Array.ts'
 
-interface Array<T> {
-  lazyFlat(): Array<T>
+declare global {
+  interface Array<T> {
+    asMLArray<T>(): MLArray<T>
+    lazyFlat(): Array<T>
+  }
 }
+
+export {}

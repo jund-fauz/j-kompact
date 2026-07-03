@@ -1,46 +1,86 @@
-// Manipulasi untuk spreadsheet tahunan
+import { initString } from './String.ts'
+import { initArray } from './Array.ts'
+import { isObject } from './Object.ts'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+import tz from 'dayjs/plugin/timezone'
+import { between } from './Comparison.ts'
+import { Regex } from './google/spreadsheet/Regex.ts'
 
-class MLDate extends Date {
-  constructor(...values) {
-    if (values.length)
-      super(...values)
-    else
-      super()
-    this.date = super.getDate()
-    this.month = this.getMonth()
-    this.shortMonth = initString(shortMonths.get(this.month))
-    this.longMonth = initString(longMonths.get(this.month))
-    this.year = super.getFullYear()
+const shortMonths = initArray([
+    'JAN', 'FEB', 'MAR', 'APR', 'MEI', 'JUN',
+    'JUL', 'AGS', 'SEP', 'OKT', 'NOV', 'DES'
+  ]),
+  longMonths = initArray([
+    'JANUARI', 'FEBRUARI', 'MARET', 'APRIL', 'MEI', 'JUNI',
+    'JULI', 'AGUSTUS', 'SEPTEMBER', 'OKTOBER', 'NOVEMBER', 'DESEMBER'
+  ])
+
+export class MLDate extends Date {
+  constructor(...values: any[]) {
+    super(...(values as [any, any?, any?]))
   }
 
-  getMonth() {
-    return super.getMonth() + 1
+  /** Getter & Setter */
+
+  get date() {
+    return super.getDate()
   }
 
-  /**
-   * @param month
-   * @param {number|null} date
-   * @return {MLDate}
-   */
-  setMonth(month, date = null) {
-    month--
-    if (date)
-      super.setMonth(month, date)
+  get lastDate() {
+    return new Date(this.year, this.month - 1, 0).getDate()
+  }
+
+  get month(): number {
+    return this.getMonth() + 1
+  }
+
+  get shortMonth() {
+    return initString(shortMonths.get(this.month))
+  }
+
+  get longMonth() {
+    return initString(longMonths.get(this.month))
+  }
+
+  get year() {
+    return this.getFullYear()
+  }
+
+  set date(date: number) {
+    super.setDate(date)
+  }
+
+  set month(month: number | string) {
+    let param: number
+    if (typeof month === 'string')
+      param = month.length === 3
+        ? shortMonths.locationOf(month as typeof shortMonths[number])
+        : longMonths.locationOf(month as typeof longMonths[number])
     else
-      super.setMonth(month)
-    this.month = this.getMonth()
-    this.shortMonth = initString(shortMonths.get(this.month))
-    this.longMonth = initString(longMonths.get(this.month))
+      param = month
+    super.setMonth(param - 1)
+  }
+
+  set year(year: number) {
+    super.setFullYear(year)
+  }
+
+  override setDate(date: number): MLDate
+
+  override setDate(date: number): number
+
+  override setDate(date: number): MLDate | number {
+    this.date = date
     return this
   }
 
-  /**
-   * @param date
-   * @return {MLDate}
-   */
-  setDate(date) {
-    super.setDate(date)
-    this.date = super.getDate()
+  override setMonth(month: number | string): MLDate
+
+  override setMonth(month: number, date?: number): number
+
+  override setMonth(month: number | string): MLDate | number {
+    this.month = month
     return this
   }
 
@@ -52,21 +92,23 @@ class MLDate extends Date {
     return new MLDate(this.getTime()).setDate(1).setMonth(this.getMonth() + 1)
   }
 
-  format(format) {
-    return Utilities.formatDate(this, 'Asia/Jakarta', format)
+  format(format: string, timezone = 'Asia/Jakarta') {
+    dayjs.extend(utc)
+    dayjs.extend(tz)
+    return dayjs(this)
+      .tz(timezone)
+      .format(format.replaceAll('y', 'Y').replaceAll('d', 'D'))
   }
 }
 
-/**
- * @param {number|string|Date|MLDate|{year?: number, month?: number|string, date?: number}} value
- * @return {MLDate}
- */
-function initDate(...value) {
+type DateObject = { year?: number; month?: number | typeof longMonths[number]; date?: number }
+
+export function initDate(...value: [number | string | Date | MLDate | DateObject]) {
   switch (true) {
     case isObject(value[0]):
       const today = new MLDate(),
-        { date = today.date, month = today.month, year = today.year } = value[0]
-      return new MLDate(year, (typeof month === 'string' ? longMonths.get(month) : month) - 1, date)
+        { date = today.date, month = today.month, year = today.year } = value[0] as DateObject
+      return new MLDate(year, +(typeof month === 'string' ? longMonths.indexOf(month) : month) - 1, date)
     case !!value.length:
       return new MLDate(...value)
     default:
@@ -74,47 +116,12 @@ function initDate(...value) {
   }
 }
 
-/** @type {MLArray<string>} */
-var shortMonths = MLArray.init([
-  'JAN', 'FEB', 'MAR', 'APR', 'MEI', 'JUN',
-  'JUL', 'AGS', 'SEP', 'OKT', 'NOV', 'DES'
-])
-
-/** @type {MLArray<string>} */
-var longMonths = MLArray.init([
-  'JANUARI', 'FEBRUARI', 'MARET', 'APRIL', 'MEI', 'JUNI',
-  'JULI', 'AGUSTUS', 'SEPTEMBER', 'OKTOBER', 'NOVEMBER', 'DESEMBER'
-])
-
-/**
- * Convert tanggal dalam bentuk angka dari spreadsheet ke objek MLDate
- * @param {number} value
- * @return {MLDate}
- */
-function toMLDate(value) {
-  const date = initDate(Math.round((value - 25569) * 86400000))
-  if (!isDate(date)) throw Error(`${value} bukanlah angka tanggal yang valid`)
-  return date
-}
-
 /**
  * Cek apakah string / objek Date adalah tanggal yang valid
- * @param {string|Date} value
- * @return {boolean}
  */
-function isDate(value) {
+export function isDate(value: string | Date) {
   if (value instanceof Date) return !isNaN(value.getTime())
   if (typeof value !== 'string' || Regex.Invoice.test(value)) return false
   const date = new Date(value)
   return !isNaN(date.getTime()) && between(1999, date.getFullYear(), 2099)
-}
-
-/**
- * Cek apakah nilai yang diberikan merupakan tahun yang valid (1999 - 2099)
- * @param {any} value
- * @return {boolean}
- */
-function isYear(value) {
-  value = Number(value)
-  return !isNaN(value) && between(1999, value, 2099)
 }

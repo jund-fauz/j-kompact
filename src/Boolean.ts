@@ -1,27 +1,18 @@
-/**
- * @param {string|boolean} value
- */
-function reverseBoolean(value) {
+type StringBoolean = 'TRUE' | 'FALSE'
+const stringBoolean = ['TRUE', 'FALSE'],
+  reservedBoolean = stringBoolean.reverse()
+
+export function reverseBoolean(value: StringBoolean | boolean) {
   switch (typeof value) {
     case 'boolean':
       return !value
     case 'string':
-      switch (value) {
-        case 'TRUE':
-          return 'FALSE'
-        case 'FALSE':
-          return 'TRUE'
-        default:
-          throw Error('Value tidak valid.')
-      }
+      if (!stringBoolean.includes(value))
+        throw Error('Value tidak valid.')
+      return reservedBoolean[stringBoolean.indexOf(value)]
   }
 }
 
-/**
- * @param {boolean} condition
- * @param {any} value
- * @return {any|string}
- */
-function ifTrue(condition, value) {
+export function ifTrue<T>(condition: boolean, value: T) {
   return condition ? value : ''
 }
