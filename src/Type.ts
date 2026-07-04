@@ -11,8 +11,3 @@ export const /** Type for Storage Manipulation */
 
     And = '&&',
     Or = '||'
-
-export enum Logic {
-    AND,
-    OR
-}

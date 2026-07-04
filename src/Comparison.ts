@@ -1,8 +1,11 @@
-import { And, Logic } from './Type'
+import { And } from './Type'
 import { isObject } from './Object.ts'
-import { flat, getOptions, lazyWrap, MLArray } from './Array.ts'
+import { flat, getOptions, lazyWrap, type Logic, MLArray } from './Array.ts'
 import { isString } from "./String.ts";
 import { log } from './Dynamic.ts'
+
+type CompareNumber = '<' | '<=' | '<=<' | '<<='
+type CompareParam<T> = Array<T| { logic: Logic }>
 
 export function isSame(...arr: any[]) {
   return new Set(flat(arr)).size === 1
@@ -29,9 +32,10 @@ export function notSameWith(value: any, ...arr: any) {
 }
 
 /**
- * Membandingkan 3 value dengan prinsip "Between And"
+ * Mengecek apakah 'value' ada di antara 'start' sampai 'until'
+ * Mendukung komparasi: '<', '<=', '<=<', '<<='
  */
-export function between(start: number, value: number | number[], until: number, compare: string | string[] = '<'): boolean {
+export function between(start: number, value: number | number[], until: number, compare: CompareNumber | CompareNumber[] = '<'): boolean {
   [start, until] = [start ?? 0, until ?? 0]
   let values = lazyWrap(value).map((value?: number) => value ?? 0)
   const compares = lazyWrap(compare)
@@ -52,43 +56,21 @@ export function between(start: number, value: number | number[], until: number, 
   })
 }
 
-export function lowerThan(value: number, ...comparations: number[]) {
+export function lowerThan(value: number, ...comparations: CompareParam<number>) {
   const { logic = And } = getOptions(comparations),
     isLowerThan = (comparation: number) => value < comparation
   return logic === And
-    ? flat(comparations).every(isLowerThan)
-    : flat(comparations).some(isLowerThan)
+    ? flat(comparations as number[]).every(isLowerThan)
+    : flat(comparations as number[]).some(isLowerThan)
 }
 
 /**
  * Mengecek tipe data menggunakan "typeof" bawaan JavaScript untuk banyak variabel sekaligus
  */
-export function isTypeOf(type: string, ...array: any): boolean {
+export function isTypeOf(type: string, ...array: CompareParam<any>): boolean {
   const { logic = And } = getOptions(array)
   array = array.lazyFlat()
   return logic === And
     ? array.every((val: any) => type === 'string' ? isString(val) : typeof val === type)
     : array.some((val: any) => type === 'string' ? isString(val) : typeof val === type)
-}
-
-/**
- * @deprecated Use native '!!' JavaScript mark instead
- */
-export function isTruthy(...array: any[] | [{ logic: Logic }]) {
-  const { logic = And } = getOptions(array)
-  array = array.lazyFlat()
-  return logic === And
-    ? array.filter(data => data).length === array.length
-    : array.some(data => data)
-}
-
-/**
- * @deprecated Use native '!!' JavaScript mark instead
- */
-export function isFalsy(...array: any[] | [{ logic: Logic }]) {
-  const { logic = And } = getOptions(array)
-  array = array.lazyFlat()
-  return logic === And
-    ? array.filter(data => !data).length === array.length
-    : array.some(data => !data)
 }

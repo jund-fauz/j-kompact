@@ -2,7 +2,7 @@
 import { Break, iterate } from './Iteration.ts'
 import { sameWith } from './Comparison.ts'
 import { isObject, MLObject } from './Object.ts'
-import { And, Ascending, Descending, Logic, Or } from './Type.ts'
+import { And, Ascending, Descending, Or } from './Type.ts'
 import { log } from './Dynamic.ts'
 import { isString } from './String.ts'
 
@@ -10,6 +10,7 @@ export const isArray = Array.isArray
 type MLArrayOptions = { flatting?: boolean, deleteNull?: boolean, unique?: boolean, withLog?: boolean }
 export type callbackFunction<T, U> = (value: T, no: number, array: MLArray<T>) => U
 export type OrderBy = typeof Ascending | typeof Descending
+export type Logic = typeof And | typeof Or
 
 export class MLArray<T> extends Array<T> {
   batchSize = 50000

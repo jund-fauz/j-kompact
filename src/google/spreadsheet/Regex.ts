@@ -1,1 +1,0 @@
-export const Regex = Object.freeze({ Invoice: /^[a-zA-Z]+[-_]\d+/ })

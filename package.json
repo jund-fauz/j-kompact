@@ -1,6 +1,11 @@
 {
   "name": "j-kompact",
   "author": "Jundi",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "vitest run",
+    "test:run": "vitest"
+  },
   "devDependencies": {
     "@types/bun": "latest",
     "@types/google-apps-script": "^2.0.11",

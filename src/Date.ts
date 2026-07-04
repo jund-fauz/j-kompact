@@ -5,7 +5,6 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import tz from 'dayjs/plugin/timezone'
 import { between } from './Comparison.ts'
-import { Regex } from './google/spreadsheet/Regex.ts'
 
 const shortMonths = initArray([
     'JAN', 'FEB', 'MAR', 'APR', 'MEI', 'JUN',
@@ -121,7 +120,7 @@ export function initDate(...value: [number | string | Date | MLDate | DateObject
  */
 export function isDate(value: string | Date) {
   if (value instanceof Date) return !isNaN(value.getTime())
-  if (typeof value !== 'string' || Regex.Invoice.test(value)) return false
+  if (typeof value !== 'string' || /^[a-zA-Z]+[-_]\d+/.test(value)) return false
   const date = new Date(value)
   return !isNaN(date.getTime()) && between(1999, date.getFullYear(), 2099)
 }
