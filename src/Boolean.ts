@@ -1,4 +1,4 @@
-type StringBoolean = 'TRUE' | 'FALSE'
+export type StringBoolean = 'TRUE' | 'FALSE'
 const stringBoolean = ['TRUE', 'FALSE'],
   reservedBoolean = ['FALSE', 'TRUE']
 

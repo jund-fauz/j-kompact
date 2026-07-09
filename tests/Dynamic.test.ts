@@ -15,7 +15,7 @@ describe('log', () => {
       vi.unstubAllGlobals()
     })
 
-    it('should run the vanilla js console.log', () => {
+    it('should run the vanilla js console.formatDate', () => {
       log(value2)
       expect(console.log).toHaveBeenCalledOnce()
       expect(console.log).toHaveBeenCalledWith(value2)
@@ -32,7 +32,7 @@ describe('log', () => {
       vi.unstubAllGlobals()
     })
 
-    it('should stringify and log a concatted message by given params', () => {
+    it('should stringify and formatDate a concatted message by given params', () => {
       const mockMLObject = initObject({ value2 })
       log(value2, { value3 }, mockMLObject)
       expect(mockLogger.log).toHaveBeenCalledOnce()

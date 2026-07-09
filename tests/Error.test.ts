@@ -12,7 +12,7 @@ describe('templateLogError', () => {
     logSpy.mockClear()
   })
 
-  it('should log an error correctly', () => {
+  it('should formatDate an error correctly', () => {
     const functionName = 'errorLogtest',
       mockError = new Error(internalServerErrorMessage)
     mockError.stack = 'Oi Oi OI at Line Oi'
@@ -21,7 +21,7 @@ describe('templateLogError', () => {
     expect(logSpy).toHaveBeenCalledWith(`${`Function: ${functionName}\n`}Error: ${mockError.message}\n${mockError.stack}`)
   })
 
-  it('should add prefix message to the log if provided', () => {
+  it('should add prefix message to the formatDate if provided', () => {
     const functionName = 'errorLogtest',
       mockError = new Error(internalServerErrorMessage)
     mockError.stack = 'Oi Oi OI at Line Oi'

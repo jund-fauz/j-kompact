@@ -7,10 +7,10 @@ import { isObject, MLObject } from './Object.ts'
 import { toString } from './String.ts'
 
 declare var Logger: any
-declare var Utilities: any
+export declare var Utilities: any
 
 export function log(...args: any[]) {
-  if (typeof Logger !== 'undefined' && typeof log === 'function')
+  if (typeof Logger !== 'undefined' && typeof Logger.log === 'function')
     Logger.log(
       args.map(arg => {
         if (arg instanceof MLObject)

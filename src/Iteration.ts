@@ -3,7 +3,7 @@ import { log, wait } from './Dynamic.ts'
 export const Break = 'BREAK'
 
 /**
- * Deklarasi perulangan for dengan format seperti forEach
+ * Deklarasi perulangan for dengan formatDate seperti forEach
  */
 export function iterate<T>(func: (no: number) => void | T, options: {
   from?: number,

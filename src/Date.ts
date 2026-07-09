@@ -5,6 +5,7 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import tz from 'dayjs/plugin/timezone'
 import { between } from './Comparison.ts'
+import { Utilities } from './Dynamic.ts'
 
 const shortMonths = initArray([
     'JAN', 'FEB', 'MAR', 'APR', 'MEI', 'JUN',
@@ -16,7 +17,7 @@ const shortMonths = initArray([
   ])
 
 export class MLDate extends Date {
-  constructor(...values: any[]) {
+  constructor(...values: number[] | [string | Date | MLDate | DateObject]) {
     super(...(values as [any, any?, any?]))
   }
 
@@ -27,7 +28,7 @@ export class MLDate extends Date {
   }
 
   get lastDate() {
-    return new Date(this.year, this.month - 1, 0).getDate()
+    return new Date(this.year, this.month, 0).getDate()
   }
 
   get month(): number {
@@ -84,14 +85,16 @@ export class MLDate extends Date {
   }
 
   lastMonth() {
-    return new MLDate(this.getTime()).setDate(1).setMonth(this.getMonth() - 1)
+    return new MLDate(this.getTime()).setDate(1).setMonth(this.month - 1)
   }
 
   nextMonth() {
-    return new MLDate(this.getTime()).setDate(1).setMonth(this.getMonth() + 1)
+    return new MLDate(this.getTime()).setDate(1).setMonth(this.month + 1)
   }
 
   format(format: string, timezone = 'Asia/Jakarta') {
+    if (typeof Utilities !== 'undefined' && typeof Utilities.formatDate === 'function')
+      return Utilities.formatDate(this, timezone, format)
     dayjs.extend(utc)
     dayjs.extend(tz)
     return dayjs(this)
@@ -100,16 +103,28 @@ export class MLDate extends Date {
   }
 }
 
-type DateObject = { year?: number; month?: number | typeof longMonths[number]; date?: number }
+export type DateObject = { year?: number, month?: number | typeof longMonths[number] | typeof shortMonths[number], date?: number }
 
-export function initDate(...value: [number | string | Date | MLDate | DateObject]) {
+export function initDate(...value: number[] | [string | Date | MLDate | DateObject]) {
   switch (true) {
     case isObject(value[0]):
       const today = new MLDate(),
         { date = today.date, month = today.month, year = today.year } = value[0] as DateObject
-      return new MLDate(year, +(typeof month === 'string' ? longMonths.indexOf(month) : month) - 1, date)
+      return new MLDate(
+        year,
+        +(typeof month === 'string'
+          ? month.length === 3
+            ? shortMonths.indexOf(month as typeof shortMonths[number])
+            : longMonths.indexOf(month as typeof longMonths[number])
+          : (month - 1)),
+        date
+      )
     case !!value.length:
       return new MLDate(...value)
+    case value[0] instanceof MLDate:
+        return value[0]
+    case value[0] instanceof Date:
+        return new MLDate(value[0])
     default:
       return new MLDate()
   }
@@ -118,9 +133,9 @@ export function initDate(...value: [number | string | Date | MLDate | DateObject
 /**
  * Cek apakah string / objek Date adalah tanggal yang valid
  */
-export function isDate(value: string | Date) {
+export function isDate(value: any) {
   if (value instanceof Date) return !isNaN(value.getTime())
   if (typeof value !== 'string' || /^[a-zA-Z]+[-_]\d+/.test(value)) return false
   const date = new Date(value)
-  return !isNaN(date.getTime()) && between(1999, date.getFullYear(), 2099)
+  return !isNaN(date.getTime())
 }

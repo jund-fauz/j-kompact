@@ -33,15 +33,14 @@ export class MLArray<T> extends Array<T> {
 
 
   static repeat<T>(valueOrFunction: T | ((value: T, no: number) => MLArray<T>), count = 1) {
-    return super.from({ length: count }, typeof valueOrFunction === 'function' ? valueOrFunction as (value: T, no: number) => T : (value: T, no: number) => valueOrFunction)
+    return super.from({ length: count }, typeof valueOrFunction === 'function' ? valueOrFunction as (value: T, no: number) => T : (_: T, __: number) => valueOrFunction)
   }
 
   static init<const T>(array: T | Array<T | {
     [s: string]: T
   }> = [], options: MLArrayOptions = {}): MLArray<T extends readonly any[] ? T[number] : T> {
-    const { flatting = false, deleteNull = false, unique = false, withLog = false } = options
+    const { flatting = false, deleteNull = false, unique = false, withLog = true } = options
     let result  = this.from(lazyWrap(array)) as MLArray<T>
-    result.batchSize = 50000
     if (flatting)
       result.lazyFlat()
     if (deleteNull)

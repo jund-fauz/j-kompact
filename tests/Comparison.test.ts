@@ -2,22 +2,27 @@ import { describe, expect, it } from 'vitest'
 import { between, isSame, isTypeOf, lowerThan, notSameWith, sameWith } from '../src/Comparison.ts'
 import { value1, value2, value3 } from './Value.ts'
 import { Or } from '../src/Type.ts'
+import type { Logic } from '../src/Array.ts'
 
 describe('isSame', () => {
   it('should return true if there is no unique value in the given values', () => {
     expect(isSame(1, 1, 1, 1, 1, 1, 1)).toBe(true)
   })
 
-  it('should return false if there is one or more value are different each other', () => {
-    expect(isSame(1, 2, 1, 1, 1, 1, 1)).toBe(false)
-    expect(isSame(1, '1')).toBe(false)
+  it.for([
+    [1, 2, 1, 1, 1, 1, 1],
+    [1, '1']
+  ])('should return false if there is one or more value are different each other', (param) => {
+    expect(isSame(...param)).toBe(false)
   })
 })
 
 describe('sameWith', () => {
-  it('should return true if the given value (strict) same with the other values based on the given logic', () => {
-    expect(sameWith(value1, value1, value1, value1, value1, value1, value1)).toBe(true)
-    expect(sameWith(value1, value2, value1, value2, value1, value2, value1, { logic: Or })).toBe(true)
+  it.for([
+    [value2, value2, value2, value2, value2, value2, value2],
+    [value1, value2, value1, value2, value1, value2, value1, { logic: Or }]
+  ])('should return true if the given value (strict) same with the other values based on the given logic', (param) => {
+    expect(sameWith(...(param as [string, Logic]))).toBe(true)
   })
 
   it('should return false if the given value (strict) not same with the other values based on the given logic', () => {
@@ -36,41 +41,53 @@ describe('notSameWith', () => {
 })
 
 describe('between', () => {
-  it(`should return true if the value is between 'start' and 'until' based on the given comparison logic`, () => {
-    expect(between(1, 2, 3, '<')).toBe(true)
-    expect(between(1, 1, 1, '<=')).toBe(true)
-    expect(between(1, 1, 2, '<=<')).toBe(true)
-    expect(between(1, 2, 2, '<<=')).toBe(true)
+  it.for([
+    [1, 2, 3, '<'],
+    [1, 1, 1, '<='],
+    [1, 1, 2, '<=<'],
+    [1, 2, 2, '<<='],
+  ])(`should return true if the value is between 'start' and 'until' based on the given comparison logic`, (param) => {
+    expect(between(...(param as [number, number, number]))).toBe(true)
   })
 
-  it(`should return false if the value is not between 'start' and 'until' based on the given comparison logic`, () => {
-    expect(between(1, 1, 3, '<')).toBe(false)
-    expect(between(1, 3, 2, '<=')).toBe(false)
-    expect(between(1, 2, 2, '<=<')).toBe(false)
-    expect(between(1, 1, 2, '<<=')).toBe(false)
+  it.for([
+    [1, 1, 3, '<'],
+    [1, 3, 2, '<='],
+    [1, 2, 2, '<=<'],
+    [1, 1, 2, '<<='],
+  ])(`should return false if the value is not between 'start' and 'until' based on the given comparison logic`, (param) => {
+    expect(between(...(param as [number, number, number]))).toBe(false)
   })
 })
 
 describe('lowerThan', () => {
-  it('should return true if the given value is lower than the other values based on the given logic', () => {
-    expect(lowerThan(1, 2, 3, 4, 5, 6, 7, 8)).toBe(true)
-    expect(lowerThan(5, 2, 3, 4, 5, 6, 7, 8, { logic: Or })).toBe(true)
+  it.for([
+    [1, 2, 3, 4, 5, 6, 7, 8],
+    [5, 2, 3, 4, 5, 6, 7, 8, { logic: Or }]
+  ])('should return true if the given value is lower than the other values based on the given logic', (param) => {
+    expect(lowerThan(...(param as [number]))).toBe(true)
   })
 
-  it('should return false if the given value is higher than or equal with the other values based on the given logic', () => {
-    expect(lowerThan(5, 2, 3, 4, 5, 6, 7, 8)).toBe(false)
-    expect(lowerThan(8, 2, 3, 4, 5, 6, 7, 8, { logic: Or })).toBe(false)
+  it.for([
+    [5, 2, 3, 4, 5, 6, 7, 8],
+    [8, 2, 3, 4, 5, 6, 7, 8, { logic: Or }],
+  ])('should return false if the given value is higher than or equal with the other values based on the given logic', (param) => {
+    expect(lowerThan(...(param as [number]))).toBe(false)
   })
 })
 
 describe('isTypeOf', () => {
-  it('should return true if the given values is type of given type based on the given logic', () => {
-    expect(isTypeOf('string', value1, value2, value3)).toBe(true)
-    expect(isTypeOf('string', value1, 2, 3.5, { logic: Or })).toBe(true)
+  it.for([
+    [value1, value2, value3],
+    [value1, 2, 3.5, { logic: Or }],
+  ])('should return true if the given values is type of given type based on the given logic', (param) => {
+    expect(isTypeOf('string', ...param)).toBe(true)
   })
 
-  it('should return false if the given values is not type of given type based on the given logic', () => {
-    expect(isTypeOf('number', value1, value2, value3)).toBe(false)
-    expect(isTypeOf('boolean', value1, 2, 3.5, { logic: Or })).toBe(false)
+  it.for([
+    ['number', value1, value2, value3],
+    ['boolean', value1, 2, 3.5, { logic: Or }]
+  ])('should return false if the given values is not type of given type based on the given logic', (param) => {
+    expect(isTypeOf(...(param as [string]))).toBe(false)
   })
 })
