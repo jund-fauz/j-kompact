@@ -118,7 +118,7 @@ export class MLObject<T> {
     return this
   }
 
-  set(keys: string | string[] | MLArray<string> | MLObject<T>, values: T | T[] | MLArray<T> | null = null) {
+  set(keys: string | string[] | Record<string, T> | MLArray<string> | MLObject<T>, values: T | T[] | MLArray<T> | null = null) {
     if (isObject(keys))
       initObject(keys as Record<string, T>).forEach((key, value) => this.object[key] = this[key] = value)
     else {
