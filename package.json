@@ -1,6 +1,6 @@
 {
   "name": "j-kompact",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A utility library to manipulate data in js based application",
   "author": "Jundi",
   "license": "MPL-2.0",
@@ -13,7 +13,10 @@
       "import": "./dist/index.js"
     }
   },
-  "files": ["dist", "global.d.ts"],
+  "files": [
+    "dist",
+    "global.d.ts"
+  ],
   "scripts": {
     "test": "vitest run",
     "build": "tsc -p tsconfig.build.json",
