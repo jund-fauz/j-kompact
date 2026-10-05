@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, type Mock, vi } from 'vitest'
-import { templateLogError } from '../src/Error.ts'
+import { templateLogError } from '../src'
 import { internalServerErrorMessage } from './Value.ts'
 import * as Dynamic from '../src/Dynamic.ts'
 

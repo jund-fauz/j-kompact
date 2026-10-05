@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, type Mock, vi } from 'vitest'
-import { log } from '../src/Dynamic.ts'
+import { log, initObject } from '../src'
 import { value1, value2, value3 } from './Value.ts'
-import { initObject } from '../src/Object.ts'
 
 describe('log', () => {
   describe('non-GAS environment', () => {

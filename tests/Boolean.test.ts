@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { ifTrue, reverseBoolean, type StringBoolean } from '../src/Boolean.ts'
+import { ifTrue, reverseBoolean, type StringBoolean } from '../src'
 import { value2 } from './Value.ts'
 
 describe('reverseBoolean', () => {

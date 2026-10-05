@@ -7,7 +7,7 @@ import { isObject, MLObject } from './Object.ts'
 import { toString } from './String.ts'
 
 declare var Logger: any
-export declare var Utilities: any
+declare var Utilities: any
 
 export function log(...args: any[]) {
   if (typeof Logger !== 'undefined' && typeof Logger.log === 'function')

@@ -1,4 +1,4 @@
-import { And } from './Type'
+import { And } from './Type.ts'
 import { isObject } from './Object.ts'
 import { flat, getOptions, lazyWrap, type Logic, MLArray } from './Array.ts'
 import { isString } from "./String.ts";

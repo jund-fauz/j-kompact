@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { Break, iterate, retry } from '../src/Iteration.ts'
+import { Break, iterate, retry } from '../src'
 import { internalServerErrorMessage, value2 } from './Value.ts'
 
 describe('iterate', () => {

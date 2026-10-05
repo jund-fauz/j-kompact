@@ -1,21 +1,33 @@
 {
   "name": "j-kompact",
-  "author": "Jundi",
   "version": "1.0.0",
+  "description": "A utility library to manipulate data in js based application",
+  "author": "Jundi",
+  "license": "MPL-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "global.d.ts"],
   "scripts": {
     "test": "vitest run",
-    "test:run": "vitest"
-  },
-  "devDependencies": {
-    "@types/bun": "latest",
-    "@types/google-apps-script": "^2.0.11",
-    "ts-to-jsdoc": "^2.4.0",
-    "vitest": "^4.1.9"
-  },
-  "peerDependencies": {
-    "typescript": "^6.0.3"
+    "build": "tsc -p tsconfig.build.json",
+    "prebuild": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "prepublishOnly": "bun run build && bun run test"
   },
   "dependencies": {
     "dayjs": "^1.11.21"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/google-apps-script": "^2.0.13",
+    "ts-to-jsdoc": "^2.4.0",
+    "vitest": "5.0.0-rc.2",
+    "typescript": "^7.0.2"
   }
 }

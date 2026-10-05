@@ -1,8 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { between, isSame, isTypeOf, lowerThan, notSameWith, sameWith } from '../src/Comparison.ts'
+import { between, isSame, isTypeOf, lowerThan, notSameWith, sameWith, Or } from '../src'
+import type { Logic } from '../src'
 import { value1, value2, value3 } from './Value.ts'
-import { Or } from '../src/Type.ts'
-import type { Logic } from '../src/Array.ts'
 
 describe('isSame', () => {
   it('should return true if there is no unique value in the given values', () => {

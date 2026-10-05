@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, type Mock, vi } from 'vitest'
-import { type DateObject, initDate, isDate, MLDate } from '../src/Date.ts'
+import { type DateObject, initDate, isDate, MLDate } from '../src'
 import { value2 } from './Value.ts'
 
 describe('MLDate', () => {

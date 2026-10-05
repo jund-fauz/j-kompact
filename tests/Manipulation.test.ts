@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { trim } from '../src/Manipulation.ts'
+import { trim, initObject } from '../src'
 import { value2 } from './Value.ts'
-import { initObject } from '../src/Object.ts'
 
 describe('trim', () => {
   const notYetTrimmedValue2 = ` ${value2} `

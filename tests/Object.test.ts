@@ -1,10 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { value1, value2, value3 } from './Value'
-import { initObject, isEmpty, isObject, MLObject, parse, toJSObject } from '../src/Object.ts'
-import { initArray, MLArray } from '../src/Array.ts'
-import { log } from '../src/Dynamic.ts'
-import { initString } from '../src/String.ts'
-import { mlArray, mlObject } from '../src/Type.ts'
+import { initObject, isEmpty, isObject, MLObject, parse, toJSObject, initArray, MLArray, initString, mlArray, mlObject, log } from '../src'
 
 describe('MLObject', () => {
   describe('static', () => {

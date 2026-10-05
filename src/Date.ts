@@ -2,10 +2,10 @@ import { initString } from './String.ts'
 import { initArray } from './Array.ts'
 import { isObject } from './Object.ts'
 import dayjs from 'dayjs'
-import utc from 'dayjs/plugin/utc'
-import tz from 'dayjs/plugin/timezone'
-import { between } from './Comparison.ts'
-import { Utilities } from './Dynamic.ts'
+import utc from 'dayjs/plugin/utc.js'
+import tz from 'dayjs/plugin/timezone.js'
+
+declare var Utilities: any
 
 const shortMonths = initArray([
     'JAN', 'FEB', 'MAR', 'APR', 'MEI', 'JUN',

@@ -1,4 +1,4 @@
-import type { MLArray } from './src/Array.ts'
+import type { MLArray } from './src'
 
 declare global {
   interface Array<T> {
