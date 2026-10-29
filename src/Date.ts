@@ -21,7 +21,23 @@ export class MLDate extends Date {
     super(...(values as [any, any?, any?]))
   }
 
-  /** Getter & Setter */
+  /** Getter */
+
+  get miliseconds() {
+    return super.getMilliseconds()
+  }
+
+  get seconds() {
+    return super.getSeconds()
+  }
+
+  get minutes() {
+    return super.getMinutes()
+  }
+
+  get hours() {
+    return super.getHours()
+  }
 
   get date() {
     return super.getDate()
@@ -47,6 +63,8 @@ export class MLDate extends Date {
     return this.getFullYear()
   }
 
+  /** Setter */
+
   set date(date: number) {
     super.setDate(date)
   }
@@ -64,6 +82,18 @@ export class MLDate extends Date {
 
   set year(year: number) {
     super.setFullYear(year)
+  }
+
+  /** Override */
+
+  override setHours(hours: number, min?: number, sec?: number, ms?: number): MLDate
+
+  override setHours(hours: number, min?: number, sec?: number, ms?: number): number
+
+  override setHours(hours: number, min?: number, sec?: number, ms?: number): MLDate | number {
+    const parameters = [hours, min, sec, ms].filter(value => value !== undefined) as [number]
+    super.setHours(...parameters)
+    return this
   }
 
   override setDate(date: number): MLDate
