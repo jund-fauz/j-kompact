@@ -12,3 +12,5 @@ it.for([
 ])('should check year correctly', ([data, result]) => {
 	expect(isYear(data)).toBe(result)
 })
+
+/** TODO: toMlDate() test */
