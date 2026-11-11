@@ -138,8 +138,10 @@ describe('MLArray', () => {
       it.for([
         [[], {}, ''],
         [['a'], {}, 'a'],
-        [['a', 'b', 'c'], {}, 'a, b dan c'],
-        [['a', 'b', 'c'], { and: 'and', separator: ' / ' }, 'a / b and c']
+        [['a', 'b'], {}, 'a dan b'],
+        [['a', 'b', 'c'], {}, 'a, b, dan c'],
+        [['a', 'b', 'c', 'd'], { and: 'and' }, 'a, b, c, and d'],
+        [['a', 'b', 'c'], { and: 'and', separator: ' / ' }, 'a / b / and c']
       ])('should join %o readably', ([array, options, expected]) => {
         expect(initArray(array as string[], quiet).readableJoin(options as object)).toBe(expected)
       })

@@ -120,7 +120,9 @@ export class MLArray<T> extends Array<T> {
                 return String(this[0])
         }
         const { and = 'dan', separator = ', ' } = options
-        return `${this.slice(1, -1).join(separator)} ${and} ${this.at(-1)}`
+        if (this.length === 2)
+            return `${this[0]} ${and} ${this[1]}`
+        return `${this.slice(1, -1).join(separator)}${separator}${and} ${this.at(-1)}`
     }
 
     flatPush(...values: T[] | [{ many: boolean }]): MLArray<T> {
@@ -207,7 +209,7 @@ export class MLArray<T> extends Array<T> {
         }
         if (typeof search !== 'function')
             search = lazyWrap(search)
-        this.iterate((data, index, array) => {
+        this.iterate((data, index) => {
             let value = data
             if (typeof value === 'string')
                 value = value.trim() as T
