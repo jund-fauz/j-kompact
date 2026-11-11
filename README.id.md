@@ -2,10 +2,13 @@
 
 [English](./README.md) | **Bahasa Indonesia**
 
+[![JSR](https://jsr.io/badges/@jund-fauz/j-kompact)](https://jsr.io/@jund-fauz/j-kompact)
+[![JSR Score](https://jsr.io/badges/@jund-fauz/j-kompact/score)](https://jsr.io/@jund-fauz/j-kompact/score)
+
 Library utilitas untuk memanipulasi data di aplikasi JavaScript / TypeScript.
 Menyediakan class `Array`, `Object`, `String`, dan `Date` yang lebih lengkap,
 ditambah helper kecil untuk perbandingan, perulangan, dan logging. Bisa dipakai di
-**Node.js / Bun** maupun **Google Apps Script**.
+**Node.js**, **Bun**, **Deno**, maupun **Google Apps Script**.
 
 - Helper dengan indeks mulai dari 1 (`get(1)` adalah item pertama), cocok untuk
   pengolahan data spreadsheet.
@@ -18,21 +21,22 @@ ditambah helper kecil untuk perbandingan, perulangan, dan logging. Bisa dipakai 
 
 ## Instalasi
 
-Paket ini dipublikasikan di [JSR](https://jsr.io/@jund-fauz/j-kompact):
+Instal dari [JSR](https://jsr.io/@jund-fauz/j-kompact):
 
 ```bash
-npx jsr add @jund-fauz/j-kompact   # npm
-bunx jsr add @jund-fauz/j-kompact  # Bun
-deno add jsr:@jund-fauz/j-kompact  # Deno
+deno add jsr:@jund-fauz/j-kompact   # Deno
+bunx jsr add @jund-fauz/j-kompact   # Bun
+npx jsr add @jund-fauz/j-kompact    # npm
+pnpm add jsr:@jund-fauz/j-kompact   # pnpm (10.9+)
+yarn add jsr:@jund-fauz/j-kompact   # Yarn (4.9+)
 ```
 
 ```ts
 import { initArray, initObject, initString, initDate } from '@jund-fauz/j-kompact'
 ```
 
-> Paket `j-kompact` di npm masih di versi lama `1.0.x` dan belum mendapat rilis
-> `0.x`. Untuk sementara gunakan JSR. Contoh-contoh di bawah meng-import dari
-> `'j-kompact'`; ganti dengan `'@jund-fauz/j-kompact'` jika menginstal dari JSR.
+> Paket `j-kompact` di npm (`1.0.x`) sudah tidak di-maintain. Rilis baru hanya
+> dipublikasikan di JSR.
 
 Paket ini hanya mendukung ESM.
 
@@ -47,7 +51,7 @@ Saat paket di-import, dua method juga ditambahkan ke `Array.prototype`:
 `MLArray` merupakan turunan dari `Array` bawaan, jadi semua method bawaan tetap bisa dipakai.
 
 ```ts
-import { initArray, MLArray, Descending } from 'j-kompact'
+import { initArray, MLArray, Descending } from '@jund-fauz/j-kompact'
 
 const list = initArray([3, 1, [2, [4]]], { flatting: true }) // MLArray [3, 1, 2, 4]
 
@@ -93,7 +97,7 @@ isi `false` untuk mematikan log debug dari `search` dan `slice`).
 ### Object (`MLObject`)
 
 ```ts
-import { initObject, toJSObject, parse, isObject, isEmpty } from 'j-kompact'
+import { initObject, toJSObject, parse, isObject, isEmpty } from '@jund-fauz/j-kompact'
 
 const user = initObject({ name: 'Jundi', city: 'Bandung' })
 
@@ -115,7 +119,7 @@ isObject({}), isEmpty({})       // true, true
 ### String (`MLString`)
 
 ```ts
-import { initString, formatNumber, Or } from 'j-kompact'
+import { initString, formatNumber, Or } from '@jund-fauz/j-kompact'
 
 initString('nama lengkap').toCamelCase()              // 'namaLengkap'
 initString('namaLengkap').normalizeFromCamelCase()    // 'Nama lengkap'
@@ -128,7 +132,7 @@ formatNumber(7)                                       // '07'
 ### Tanggal (`MLDate`)
 
 ```ts
-import { initDate, isDate } from 'j-kompact'
+import { initDate, isDate } from '@jund-fauz/j-kompact'
 
 const date = initDate({ year: 2026, month: 'JULI', date: 1 }) // bisa juga 'JUL' atau 7
 
@@ -153,7 +157,7 @@ tanggal hari ini.
 ### Angka
 
 ```ts
-import { range } from 'j-kompact'
+import { range } from '@jund-fauz/j-kompact'
 
 range(1, 5)   // [1, 2, 3, 4, 5] (inklusif)
 range(-1, 1)  // [-1, 0, 1]
@@ -163,7 +167,7 @@ range(5, 1)   // error: 'until' should be greater than or equal to 'from'
 ### Perbandingan
 
 ```ts
-import { isSame, sameWith, notSameWith, between, lowerThan, isTypeOf, Or } from 'j-kompact'
+import { isSame, sameWith, notSameWith, between, lowerThan, isTypeOf, Or } from '@jund-fauz/j-kompact'
 
 isSame(1, 1, 1)                        // true
 sameWith('a', 'a', 'b', { logic: Or }) // true
@@ -177,7 +181,7 @@ isTypeOf('string', 'a', 1, { logic: Or }) // true
 ### Perulangan
 
 ```ts
-import { iterate, retry, Break } from 'j-kompact'
+import { iterate, retry, Break } from '@jund-fauz/j-kompact'
 
 iterate(i => i * 2, { from: 1, until: 3 })   // [2, 4, 6]
 iterate(i => (i === 3 ? Break : i), { until: 5 }) // [1, 2]
@@ -193,7 +197,7 @@ const data = retry(() => ambilData(), {
 ### Helper lainnya
 
 ```ts
-import { trim, reverseBoolean, ifTrue, log, wait, templateLogError } from 'j-kompact'
+import { trim, reverseBoolean, ifTrue, log, wait, templateLogError } from '@jund-fauz/j-kompact'
 
 trim({ name: ' Jundi ', tags: [' a '] }, { useJsObject: true }) // { name: 'Jundi', tags: ['a'] }
 reverseBoolean('TRUE')   // 'FALSE'
@@ -211,7 +215,7 @@ try {
 ### Google Spreadsheet
 
 ```ts
-import { toMLDate, isYear } from 'j-kompact'
+import { toMLDate, isYear } from '@jund-fauz/j-kompact'
 
 toMLDate(46204)  // MLDate untuk 2026-07-01 (UTC) dari angka serial tanggal spreadsheet
 isYear('2026')   // true (rentang valid: 1999 - 2099)

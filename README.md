@@ -2,10 +2,13 @@
 
 **English** | [Bahasa Indonesia](./README.id.md)
 
+[![JSR](https://jsr.io/badges/@jund-fauz/j-kompact)](https://jsr.io/@jund-fauz/j-kompact)
+[![JSR Score](https://jsr.io/badges/@jund-fauz/j-kompact/score)](https://jsr.io/@jund-fauz/j-kompact/score)
+
 A utility library for manipulating data in JavaScript / TypeScript applications.
 It adds richer `Array`, `Object`, `String`, and `Date` classes plus small helpers
-for comparison, iteration, and logging, and it runs in both **Node.js / Bun** and
-**Google Apps Script**.
+for comparison, iteration, and logging, and it runs on **Node.js**, **Bun**, **Deno**,
+and **Google Apps Script**.
 
 - One-based indexing helpers (`get(1)` is the first item), which fit spreadsheet work.
 - Chainable, in-place operations on `MLArray` (`change`, `unique`, `lazyFlat`, `flatPush`, ...).
@@ -16,21 +19,22 @@ for comparison, iteration, and logging, and it runs in both **Node.js / Bun** an
 
 ## Installation
 
-The package is published on [JSR](https://jsr.io/@jund-fauz/j-kompact):
+Install from [JSR](https://jsr.io/@jund-fauz/j-kompact):
 
 ```bash
-npx jsr add @jund-fauz/j-kompact   # npm
-bunx jsr add @jund-fauz/j-kompact  # Bun
-deno add jsr:@jund-fauz/j-kompact  # Deno
+deno add jsr:@jund-fauz/j-kompact   # Deno
+bunx jsr add @jund-fauz/j-kompact   # Bun
+npx jsr add @jund-fauz/j-kompact    # npm
+pnpm add jsr:@jund-fauz/j-kompact   # pnpm (10.9+)
+yarn add jsr:@jund-fauz/j-kompact   # Yarn (4.9+)
 ```
 
 ```ts
 import { initArray, initObject, initString, initDate } from '@jund-fauz/j-kompact'
 ```
 
-> The `j-kompact` package on npm is still at the old `1.0.x` line and does not
-> have the `0.x` releases yet. Use JSR for now. The examples below import from
-> `'j-kompact'`; replace it with `'@jund-fauz/j-kompact'` when installing from JSR.
+> The `j-kompact` package on npm (`1.0.x`) is no longer maintained. New releases
+> are published to JSR only.
 
 The package is ESM-only.
 
@@ -45,7 +49,7 @@ which is fully typed.
 `MLArray` extends the native `Array`, so every native method still works.
 
 ```ts
-import { initArray, MLArray, Descending } from 'j-kompact'
+import { initArray, MLArray, Descending } from '@jund-fauz/j-kompact'
 
 const list = initArray([3, 1, [2, [4]]], { flatting: true }) // MLArray [3, 1, 2, 4]
 
@@ -91,7 +95,7 @@ MLArray.repeat('-', 3)  // MLArray ['-', '-', '-']
 ### Object (`MLObject`)
 
 ```ts
-import { initObject, toJSObject, parse, isObject, isEmpty } from 'j-kompact'
+import { initObject, toJSObject, parse, isObject, isEmpty } from '@jund-fauz/j-kompact'
 
 const user = initObject({ name: 'Jundi', city: 'Bandung' })
 
@@ -113,7 +117,7 @@ isObject({}), isEmpty({})       // true, true
 ### String (`MLString`)
 
 ```ts
-import { initString, formatNumber, Or } from 'j-kompact'
+import { initString, formatNumber, Or } from '@jund-fauz/j-kompact'
 
 initString('nama lengkap').toCamelCase()              // 'namaLengkap'
 initString('namaLengkap').normalizeFromCamelCase()    // 'Nama lengkap'
@@ -126,7 +130,7 @@ formatNumber(7)                                       // '07'
 ### Date (`MLDate`)
 
 ```ts
-import { initDate, isDate } from 'j-kompact'
+import { initDate, isDate } from '@jund-fauz/j-kompact'
 
 const date = initDate({ year: 2026, month: 'JULI', date: 1 }) // also 'JUL' or 7
 
@@ -150,7 +154,7 @@ a `{ year, month, date }` object whose missing parts are filled from today.
 ### Number
 
 ```ts
-import { range } from 'j-kompact'
+import { range } from '@jund-fauz/j-kompact'
 
 range(1, 5)   // [1, 2, 3, 4, 5] (inclusive)
 range(-1, 1)  // [-1, 0, 1]
@@ -160,7 +164,7 @@ range(5, 1)   // throws: 'until' should be greater than or equal to 'from'
 ### Comparison
 
 ```ts
-import { isSame, sameWith, notSameWith, between, lowerThan, isTypeOf, Or } from 'j-kompact'
+import { isSame, sameWith, notSameWith, between, lowerThan, isTypeOf, Or } from '@jund-fauz/j-kompact'
 
 isSame(1, 1, 1)                        // true
 sameWith('a', 'a', 'b', { logic: Or }) // true
@@ -174,7 +178,7 @@ isTypeOf('string', 'a', 1, { logic: Or }) // true
 ### Iteration
 
 ```ts
-import { iterate, retry, Break } from 'j-kompact'
+import { iterate, retry, Break } from '@jund-fauz/j-kompact'
 
 iterate(i => i * 2, { from: 1, until: 3 })   // [2, 4, 6]
 iterate(i => (i === 3 ? Break : i), { until: 5 }) // [1, 2]
@@ -190,7 +194,7 @@ const data = retry(() => fetchSomething(), {
 ### Other helpers
 
 ```ts
-import { trim, reverseBoolean, ifTrue, log, wait, templateLogError } from 'j-kompact'
+import { trim, reverseBoolean, ifTrue, log, wait, templateLogError } from '@jund-fauz/j-kompact'
 
 trim({ name: ' Jundi ', tags: [' a '] }, { useJsObject: true }) // { name: 'Jundi', tags: ['a'] }
 reverseBoolean('TRUE')   // 'FALSE'
@@ -208,7 +212,7 @@ try {
 ### Google Spreadsheet
 
 ```ts
-import { toMLDate, isYear } from 'j-kompact'
+import { toMLDate, isYear } from '@jund-fauz/j-kompact'
 
 toMLDate(46204)  // MLDate for 2026-07-01 (UTC) from a spreadsheet serial number
 isYear('2026')   // true (valid range: 1999 - 2099)
