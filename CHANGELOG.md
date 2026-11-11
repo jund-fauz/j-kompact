@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `build:gas` script that bundles the library into a single Google Apps Script
+  file (`dist/gas/j-kompact.js`) exposing the global `JKompact` object, plus a
+  "Using with Google Apps Script" guide in the README.
+
 ## [0.3.3] - 2026-11-12
 
 No changes to the library code. This release updates the README shown on JSR.

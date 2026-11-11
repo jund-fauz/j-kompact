@@ -218,6 +218,50 @@ toMLDate(46204)  // MLDate for 2026-07-01 (UTC) from a spreadsheet serial number
 isYear('2026')   // true (valid range: 1999 - 2099)
 ```
 
+## Using with Google Apps Script
+
+Apps Script has no module system, so `import` does not work there. Instead, build
+a single bundled file that exposes the whole library as the global `JKompact`
+object:
+
+```bash
+git clone https://github.com/jund-fauz/j-kompact.git
+cd j-kompact
+bun install
+bun run build:gas   # creates dist/gas/j-kompact.js
+```
+
+Then add it to your Apps Script project:
+
+- **In the online editor:** create a new script file (for example `j-kompact.gs`)
+  and paste the content of `dist/gas/j-kompact.js` into it.
+- **With [clasp](https://github.com/google/clasp):** copy `dist/gas/j-kompact.js`
+  into your clasp project folder and run `clasp push`.
+
+Use it from any other file in the project:
+
+```js
+function main() {
+  const { initArray, initDate, log } = JKompact
+
+  const values = SpreadsheetApp.getActiveSheet().getDataRange().getValues()
+  const names = initArray(values).extract(1)  // first column
+  log(names.readableJoin())
+  log(initDate().format('dd MMMM yyyy'))      // uses Utilities.formatDate
+}
+```
+
+Notes:
+
+- The project must use the **V8 runtime** (`"runtimeVersion": "V8"` in
+  `appsscript.json`, the default for new projects).
+- `log`, `wait`, and `MLDate.format` automatically use `Logger.log`,
+  `Utilities.sleep`, and `Utilities.formatDate`.
+- If you use `JKompact` at the top level of another file (outside a function),
+  move `j-kompact.gs` to the top of the file list, because Apps Script loads files
+  in that order.
+- Rebuild and replace the file whenever you update j-kompact.
+
 ## Reporting issues
 
 Found a bug, have an idea, or spotted a mistake in the docs?

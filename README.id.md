@@ -221,6 +221,50 @@ toMLDate(46204)  // MLDate untuk 2026-07-01 (UTC) dari angka serial tanggal spre
 isYear('2026')   // true (rentang valid: 1999 - 2099)
 ```
 
+## Memakai di Google Apps Script
+
+Apps Script tidak punya sistem module, jadi `import` tidak bisa dipakai di sana.
+Sebagai gantinya, buat satu file bundle yang mengekspos seluruh library sebagai
+objek global `JKompact`:
+
+```bash
+git clone https://github.com/jund-fauz/j-kompact.git
+cd j-kompact
+bun install
+bun run build:gas   # menghasilkan dist/gas/j-kompact.js
+```
+
+Lalu tambahkan ke project Apps Script kamu:
+
+- **Lewat editor online:** buat file script baru (misalnya `j-kompact.gs`), lalu
+  tempel isi `dist/gas/j-kompact.js` ke dalamnya.
+- **Lewat [clasp](https://github.com/google/clasp):** salin `dist/gas/j-kompact.js`
+  ke folder project clasp, lalu jalankan `clasp push`.
+
+Pakai dari file lain mana pun di project tersebut:
+
+```js
+function main() {
+  const { initArray, initDate, log } = JKompact
+
+  const values = SpreadsheetApp.getActiveSheet().getDataRange().getValues()
+  const names = initArray(values).extract(1)  // kolom pertama
+  log(names.readableJoin())
+  log(initDate().format('dd MMMM yyyy'))      // memakai Utilities.formatDate
+}
+```
+
+Catatan:
+
+- Project harus memakai **runtime V8** (`"runtimeVersion": "V8"` di
+  `appsscript.json`, default untuk project baru).
+- `log`, `wait`, dan `MLDate.format` otomatis memakai `Logger.log`,
+  `Utilities.sleep`, dan `Utilities.formatDate`.
+- Jika `JKompact` dipakai di level teratas file lain (di luar fungsi), pindahkan
+  `j-kompact.gs` ke urutan paling atas di daftar file, karena Apps Script memuat
+  file sesuai urutan tersebut.
+- Build ulang dan ganti file-nya setiap kali j-kompact diperbarui.
+
 ## Melaporkan issue
 
 Menemukan bug, punya ide, atau melihat kesalahan di dokumentasi?
