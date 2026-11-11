@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.2] - 2026-11-12
+
 ### Changed
 
 - Error and log messages are now in English:
@@ -141,7 +143,8 @@ First release of the restarted version line.
 - `MLArray.sum` on numeric strings with different decimal lengths (for example
   `['1.5', '2.25']`) now returns the correct total.
 
-[Unreleased]: https://github.com/jund-fauz/j-kompact/compare/v0.3.1...HEAD
+[Unreleased]: https://github.com/jund-fauz/j-kompact/compare/v0.3.2...HEAD
+[0.3.2]: https://github.com/jund-fauz/j-kompact/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/jund-fauz/j-kompact/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/jund-fauz/j-kompact/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/jund-fauz/j-kompact/compare/v0.1.0...v0.2.0
