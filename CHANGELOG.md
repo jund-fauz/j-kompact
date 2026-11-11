@@ -10,6 +10,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.3] - 2026-11-12
+
+No changes to the library code. This release updates the README shown on JSR.
+
+### Added
+
+- Issue forms on GitHub for bug reports, feature requests, and documentation,
+  plus a "Reporting issues" section in the README.
+- `typecheck` script (`tsc --noEmit`) that checks `src/` and `tests/`. The publish
+  workflow now runs it before the tests.
+
+### Changed
+
+- The README now uses JSR as the main installation source (Deno, Bun, npm, pnpm,
+  and Yarn), imports every example from `@jund-fauz/j-kompact`, and notes that
+  the `j-kompact` package on npm is no longer maintained.
+- The README development section is now aimed at contributors and documents the
+  release flow.
+
 ## [0.3.2] - 2026-11-12
 
 ### Changed
@@ -143,7 +162,8 @@ First release of the restarted version line.
 - `MLArray.sum` on numeric strings with different decimal lengths (for example
   `['1.5', '2.25']`) now returns the correct total.
 
-[Unreleased]: https://github.com/jund-fauz/j-kompact/compare/v0.3.2...HEAD
+[Unreleased]: https://github.com/jund-fauz/j-kompact/compare/v0.3.3...HEAD
+[0.3.3]: https://github.com/jund-fauz/j-kompact/compare/v0.3.2...v0.3.3
 [0.3.2]: https://github.com/jund-fauz/j-kompact/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/jund-fauz/j-kompact/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/jund-fauz/j-kompact/compare/v0.2.0...v0.3.0
