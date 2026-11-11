@@ -1,0 +1,39 @@
+name: Publish to JSR
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # required by JSR for OIDC authentication and provenance
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Check version matches tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          jsr=$(node -p "require('./jsr.json').version")
+          pkg=$(node -p "require('./package.json').version")
+          if [ "$tag" != "$jsr" ] || [ "$tag" != "$pkg" ]; then
+            echo "Version mismatch: tag=$tag jsr.json=$jsr package.json=$pkg"
+            exit 1
+          fi
+
+      - name: Test
+        run: bun run test
+
+      - name: Publish
+        run: npx jsr publish
