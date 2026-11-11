@@ -221,13 +221,35 @@ toMLDate(46204)  // MLDate untuk 2026-07-01 (UTC) dari angka serial tanggal spre
 isYear('2026')   // true (rentang valid: 1999 - 2099)
 ```
 
-## Pengembangan
+## Pengembangan (untuk kontributor)
+
+Bagian ini untuk yang ingin mengembangkan j-kompact itu sendiri. Kamu tidak
+membutuhkannya jika hanya ingin memakai library ini.
 
 ```bash
-bun install
-bun run test    # vitest
-bun run build   # kompilasi ke dist/
+git clone https://github.com/jund-fauz/j-kompact.git
+cd j-kompact
+bun install      # instal dependency
+bun run test     # jalankan tes (Vitest)
+bun run build    # cek kompilasi TypeScript (hasilnya di dist/)
 ```
+
+JSR mempublikasikan source TypeScript di `src/` secara langsung, jadi `dist/`
+tidak ikut dirilis.
+
+### Merilis versi baru
+
+1. Ubah versi di `package.json` dan `jsr.json`, lalu tambahkan entri di
+   [CHANGELOG.md](./CHANGELOG.md).
+2. Commit, lalu push tag yang sesuai dengan versinya:
+
+   ```bash
+   git tag -a v1.2.3 -m "v1.2.3"
+   git push origin main v1.2.3
+   ```
+
+3. GitHub Actions akan mengecek kecocokan tag dengan kedua versi, menjalankan
+   tes, lalu mempublikasikan ke JSR dengan provenance.
 
 Riwayat rilis ada di [CHANGELOG.md](./CHANGELOG.md).
 

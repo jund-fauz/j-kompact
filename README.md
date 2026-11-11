@@ -218,13 +218,35 @@ toMLDate(46204)  // MLDate for 2026-07-01 (UTC) from a spreadsheet serial number
 isYear('2026')   // true (valid range: 1999 - 2099)
 ```
 
-## Development
+## Development (for contributors)
+
+This section is for working on j-kompact itself. You don't need it to use the
+library.
 
 ```bash
-bun install
-bun run test    # vitest
-bun run build   # compile to dist/
+git clone https://github.com/jund-fauz/j-kompact.git
+cd j-kompact
+bun install      # install dependencies
+bun run test     # run the test suite (Vitest)
+bun run build    # check that the TypeScript compiles (output goes to dist/)
 ```
+
+JSR publishes the TypeScript source in `src/` directly, so `dist/` is not part of
+the release.
+
+### Releasing
+
+1. Update the version in both `package.json` and `jsr.json`, and add an entry to
+   [CHANGELOG.md](./CHANGELOG.md).
+2. Commit, then push a tag that matches the version:
+
+   ```bash
+   git tag -a v1.2.3 -m "v1.2.3"
+   git push origin main v1.2.3
+   ```
+
+3. GitHub Actions checks that the tag matches both versions, runs the tests, and
+   publishes to JSR with provenance.
 
 See [CHANGELOG.md](./CHANGELOG.md) for the release history.
 
