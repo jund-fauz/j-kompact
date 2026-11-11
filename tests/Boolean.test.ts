@@ -5,9 +5,15 @@ import { value2 } from './Value.ts'
 describe('reverseBoolean', () => {
   it.for([
     ['TRUE', 'FALSE'],
-    ['FALSE', 'TRUE']
+    ['FALSE', 'TRUE'],
+    [true, false],
+    [false, true]
   ])('should return a primitive boolean or boolean in string to reversed value based on type', ([param, expected]) => {
     expect(reverseBoolean(param as StringBoolean)).toBe(expected)
+  })
+
+  it('should throw if the given string is not a valid boolean string', () => {
+    expect(() => reverseBoolean('true' as StringBoolean)).toThrow('Value tidak valid.')
   })
 })
 

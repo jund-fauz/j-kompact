@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, type Mock, vi } from 'vitest'
-import { log, initObject } from '../src'
+import { log, initObject, wait } from '../src'
 import { value1, value2, value3 } from './Value.ts'
 
 describe('log', () => {
@@ -37,5 +37,25 @@ describe('log', () => {
       expect(mockLogger.log).toHaveBeenCalledOnce()
       expect(mockLogger.log).toHaveBeenCalledWith(`${value2} ${JSON.stringify({ value3 })} ${JSON.stringify({ value2 })}`)
     })
+  })
+})
+
+describe('wait', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  it('should block for the given seconds (non-GAS environment)', () => {
+    vi.stubGlobal('Utilities', undefined)
+    const start = Date.now()
+    wait(0.2)
+    expect(Date.now() - start).toBeGreaterThanOrEqual(190)
+  })
+
+  it('should use Utilities.sleep in milliseconds (GAS environment)', () => {
+    const sleep = vi.fn()
+    vi.stubGlobal('Utilities', { sleep })
+    wait(2)
+    expect(sleep).toHaveBeenCalledWith(2000)
   })
 })

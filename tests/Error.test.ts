@@ -29,4 +29,12 @@ describe('templateLogError', () => {
     expect(logSpy).toHaveBeenCalledOnce()
     expect(logSpy).toHaveBeenCalledWith(`WOY\nFunction: ${functionName}\nError: ${mockError.message}\n${mockError.stack}`)
   })
+
+  it('should not throw if withThrow is false and omit the function name if not provided', () => {
+    const mockError = new Error(internalServerErrorMessage)
+    mockError.stack = 'Oi Oi OI at Line Oi'
+    expect(() => templateLogError(mockError, '', { withThrow: false })).not.toThrow()
+    expect(logSpy).toHaveBeenCalledOnce()
+    expect(logSpy).toHaveBeenCalledWith(`Error: ${mockError.message}\n${mockError.stack}`)
+  })
 })
