@@ -8,7 +8,7 @@ for comparison, iteration, and logging, and it runs in both **Node.js / Bun** an
 **Google Apps Script**.
 
 - One-based indexing helpers (`get(1)` is the first item), which fit spreadsheet work.
-- Chainable, in-place operations on `MLArray` (`filter`, `unique`, `lazyFlat`, ...).
+- Chainable, in-place operations on `MLArray` (`change`, `unique`, `lazyFlat`, `flatPush`, ...).
 - Environment-aware `log`, `wait`, and `MLDate.format`: they use `Logger`,
   `Utilities.sleep`, and `Utilities.formatDate` in Google Apps Script, and
   `console`, `Atomics.wait`, and `dayjs` elsewhere.
@@ -56,8 +56,9 @@ initArray(['a', 'b', 'c']).readableJoin()                // 'a, b dan c'
 initArray(['a', 'b', 'c']).readableJoin({ and: 'and' })  // 'a, b and c'
 
 initArray([1, 1, 2, null]).unique()                      // MLArray [1, 2]
-initArray([1, 2, 3, 4]).filter(n => n % 2 === 0)         // in-place: [2, 4]
-initArray([1, 2, 3, 4]).immutableFilter(n => n % 2 === 0) // new MLArray: [2, 4]
+initArray([1, 2, 3, 4]).filter(n => n % 2 === 0)         // new MLArray: [2, 4] (native behavior)
+initArray([1, 2, 3, 4]).change(n => n % 2 === 0)         // in-place: [2, 4]
+initArray([1]).flatPush([2, [3]], 4)                     // in-place and chainable: [1, 2, 3, 4]
 initArray(['0.1', '0.2']).sum()                          // 0.3
 
 // 2D arrays (for example, spreadsheet values)
@@ -75,6 +76,10 @@ MLArray.repeat('-', 3)  // MLArray ['-', '-', '-']
 
 `initArray` options: `flatting`, `deleteNull`, `unique`, `withLog` (default
 `true`; set it to `false` to silence the debug logs of `search` and `slice`).
+
+> Since 0.2.0, `push` and `filter` behave like the native methods. Use `flatPush`
+> and `change` for the chainable, in-place versions. See the
+> [CHANGELOG](./CHANGELOG.md#020---2026-11-12).
 
 ### Object (`MLObject`)
 
@@ -134,6 +139,16 @@ isDate('1 Jul 2026')  // true
 
 `initDate` accepts the same arguments as `new Date(...)`, a `Date` / `MLDate`, or
 a `{ year, month, date }` object whose missing parts are filled from today.
+
+### Number
+
+```ts
+import { range } from 'j-kompact'
+
+range(1, 5)   // [1, 2, 3, 4, 5] (inclusive)
+range(-1, 1)  // [-1, 0, 1]
+range(5, 1)   // throws: 'until' should be greater than or equal to 'from'
+```
 
 ### Comparison
 

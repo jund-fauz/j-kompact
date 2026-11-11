@@ -10,6 +10,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-12
+
+### Added
+
+- **Number** — `range(from, until)` returns an inclusive sequence of numbers and
+  throws if `until` is lower than `from`.
+- `MLArray.flatPush` — flattens the given values, pushes them in batches, and
+  returns the `MLArray` itself for chaining (the behavior `push` had in 0.1.0).
+- `MLArray.change` — filters the array in-place and returns the same `MLArray`
+  (the behavior `filter` had in 0.1.0).
+
+### Changed
+
+- **Breaking:** `MLArray.push` is no longer overridden. It behaves like the native
+  `push` and returns the new length. Use `flatPush` for the old chainable,
+  flattening behavior.
+- **Breaking:** `MLArray.filter` now behaves like the native `filter`: it returns a
+  new `MLArray` and leaves the original untouched. Use `change` to filter in-place.
+
+### Removed
+
+- **Breaking:** `MLArray.immutableFilter`. Use `filter` instead.
+
+### Fixed
+
+- `MLObject.filter` works again after the `immutableFilter` removal.
+- `flatPush` now flattens nested values, so `flatPush([2, [3]], 4)` pushes
+  `2, 3, 4`. Before this fix the nested arrays were pushed as they were.
+
 ## [0.1.0] - 2026-11-12
 
 First release of the restarted version line.
@@ -54,7 +83,7 @@ First release of the restarted version line.
   `isYear`.
 - Type constants: `Ascending`, `Descending`, `And`, `Or`, `mlArray`, `mlObject`,
   `array`, `object`.
-- Test suite covering every module (274 tests).
+- Test suite covering every module (274 tests at release time).
 - English and Indonesian READMEs.
 
 ### Fixed
@@ -71,5 +100,6 @@ First release of the restarted version line.
 - `MLArray.sum` on numeric strings with different decimal lengths (for example
   `['1.5', '2.25']`) now returns the correct total.
 
-[Unreleased]: https://github.com/jund-fauz/j-kompact/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/jund-fauz/j-kompact/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/jund-fauz/j-kompact/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/jund-fauz/j-kompact/releases/tag/v0.1.0

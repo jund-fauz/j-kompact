@@ -10,7 +10,7 @@ ditambah helper kecil untuk perbandingan, perulangan, dan logging. Bisa dipakai 
 - Helper dengan indeks mulai dari 1 (`get(1)` adalah item pertama), cocok untuk
   pengolahan data spreadsheet.
 - Operasi `MLArray` yang bisa dirantai (chaining) dan langsung mengubah array
-  (in-place): `filter`, `unique`, `lazyFlat`, dan lainnya.
+  (in-place): `change`, `unique`, `lazyFlat`, `flatPush`, dan lainnya.
 - `log`, `wait`, dan `MLDate.format` menyesuaikan environment: memakai `Logger`,
   `Utilities.sleep`, dan `Utilities.formatDate` di Google Apps Script, serta
   `console`, `Atomics.wait`, dan `dayjs` di luar itu.
@@ -58,8 +58,9 @@ initArray(['a', 'b', 'c']).readableJoin()                // 'a, b dan c'
 initArray(['a', 'b', 'c']).readableJoin({ and: 'atau' }) // 'a, b atau c'
 
 initArray([1, 1, 2, null]).unique()                      // MLArray [1, 2]
-initArray([1, 2, 3, 4]).filter(n => n % 2 === 0)         // in-place: [2, 4]
-initArray([1, 2, 3, 4]).immutableFilter(n => n % 2 === 0) // MLArray baru: [2, 4]
+initArray([1, 2, 3, 4]).filter(n => n % 2 === 0)         // MLArray baru: [2, 4] (seperti bawaan)
+initArray([1, 2, 3, 4]).change(n => n % 2 === 0)         // in-place: [2, 4]
+initArray([1]).flatPush([2, [3]], 4)                     // in-place & bisa dirantai: [1, 2, 3, 4]
 initArray(['0.1', '0.2']).sum()                          // 0.3
 
 // Array 2 dimensi (misalnya nilai dari spreadsheet)
@@ -77,6 +78,10 @@ MLArray.repeat('-', 3)  // MLArray ['-', '-', '-']
 
 Opsi `initArray`: `flatting`, `deleteNull`, `unique`, `withLog` (default `true`;
 isi `false` untuk mematikan log debug dari `search` dan `slice`).
+
+> Sejak 0.2.0, `push` dan `filter` berperilaku seperti method bawaan. Gunakan
+> `flatPush` dan `change` untuk versi yang in-place dan bisa dirantai. Lihat
+> [CHANGELOG](./CHANGELOG.md#020---2026-11-12).
 
 ### Object (`MLObject`)
 
@@ -137,6 +142,16 @@ isDate('1 Jul 2026')  // true
 `initDate` menerima argumen yang sama dengan `new Date(...)`, objek `Date` /
 `MLDate`, atau objek `{ year, month, date }` yang bagian kosongnya diisi dengan
 tanggal hari ini.
+
+### Angka
+
+```ts
+import { range } from 'j-kompact'
+
+range(1, 5)   // [1, 2, 3, 4, 5] (inklusif)
+range(-1, 1)  // [-1, 0, 1]
+range(5, 1)   // error: 'until' should be greater than or equal to 'from'
+```
 
 ### Perbandingan
 
