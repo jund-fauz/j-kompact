@@ -218,6 +218,27 @@ toMLDate(46204)  // MLDate for 2026-07-01 (UTC) from a spreadsheet serial number
 isYear('2026')   // true (valid range: 1999 - 2099)
 ```
 
+## Reporting issues
+
+Found a bug, have an idea, or spotted a mistake in the docs?
+[Open an issue](https://github.com/jund-fauz/j-kompact/issues/new/choose) and pick
+the matching form:
+
+- **Bug report**: something doesn't work as expected.
+- **Feature request**: a new helper or an improvement to an existing one.
+- **Documentation**: the README or the API docs are wrong, missing, or unclear.
+
+Before opening one:
+
+1. Search the [existing issues](https://github.com/jund-fauz/j-kompact/issues?q=is%3Aissue)
+   to avoid duplicates.
+2. Check that the problem still happens with the
+   [latest version on JSR](https://jsr.io/@jund-fauz/j-kompact).
+3. For a bug, include the smallest code snippet that reproduces it, the runtime
+   (Node.js, Bun, Deno, or Google Apps Script), and the full error message.
+
+Issues can be written in English or Bahasa Indonesia.
+
 ## Development (for contributors)
 
 This section is for working on j-kompact itself. You don't need it to use the

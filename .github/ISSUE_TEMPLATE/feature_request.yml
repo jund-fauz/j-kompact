@@ -1,0 +1,55 @@
+name: Feature request
+description: Suggest a new helper or an improvement to an existing one
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the idea! Describing the problem first helps find the best solution.
+        You can write in English or Bahasa Indonesia.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What are you trying to do, and what makes it hard with j-kompact today?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed API
+      description: How would you like to use it? A code example is very helpful.
+      render: ts
+      placeholder: |
+        initArray([1, 2, 3, 4]).chunk(2) // [[1, 2], [3, 4]]
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives
+      description: Other solutions or workarounds you have considered.
+    validations:
+      required: false
+
+  - type: dropdown
+    id: breaking
+    attributes:
+      label: Would this change existing behavior?
+      options:
+        - "No, it only adds something new"
+        - "Yes, it changes how an existing function behaves"
+        - "Not sure"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched the existing issues and this has not been requested yet.
+          required: true

@@ -1,0 +1,43 @@
+name: Documentation
+description: Something in the README or the API docs is wrong, missing, or unclear
+labels: [documentation]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve the docs! You can write in English or Bahasa Indonesia.
+
+  - type: dropdown
+    id: location
+    attributes:
+      label: Where?
+      options:
+        - README.md (English)
+        - README.id.md (Bahasa Indonesia)
+        - API docs on JSR (JSDoc)
+        - CHANGELOG.md
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: link
+    attributes:
+      label: Link or section
+      placeholder: https://jsr.io/@jund-fauz/j-kompact/doc/~/initArray
+    validations:
+      required: false
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is wrong or missing?
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested fix
+    validations:
+      required: false

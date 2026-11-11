@@ -221,6 +221,28 @@ toMLDate(46204)  // MLDate untuk 2026-07-01 (UTC) dari angka serial tanggal spre
 isYear('2026')   // true (rentang valid: 1999 - 2099)
 ```
 
+## Melaporkan issue
+
+Menemukan bug, punya ide, atau melihat kesalahan di dokumentasi?
+[Buat issue](https://github.com/jund-fauz/j-kompact/issues/new/choose) dan pilih
+form yang sesuai:
+
+- **Bug report**: ada yang tidak berjalan sesuai harapan.
+- **Feature request**: usulan helper baru atau peningkatan helper yang sudah ada.
+- **Documentation**: README atau dokumentasi API salah, kurang, atau tidak jelas.
+
+Sebelum membuat issue:
+
+1. Cari di [daftar issue](https://github.com/jund-fauz/j-kompact/issues?q=is%3Aissue)
+   supaya tidak duplikat.
+2. Pastikan masalahnya masih terjadi di
+   [versi terbaru di JSR](https://jsr.io/@jund-fauz/j-kompact).
+3. Untuk bug, sertakan potongan kode terkecil yang bisa mereproduksinya, runtime
+   yang dipakai (Node.js, Bun, Deno, atau Google Apps Script), dan pesan error
+   lengkapnya.
+
+Issue boleh ditulis dalam bahasa Inggris atau Bahasa Indonesia.
+
 ## Pengembangan (untuk kontributor)
 
 Bagian ini untuk yang ingin mengembangkan j-kompact itu sendiri. Kamu tidak
