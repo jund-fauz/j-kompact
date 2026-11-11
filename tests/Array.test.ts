@@ -16,7 +16,7 @@ import {
 import { value1, value2, value3 } from './Value.ts'
 
 const quiet = { withLog: false }
-/** Mengubah MLArray (termasuk yang bersarang) menjadi array native agar bisa dibandingkan dengan toEqual */
+/** Converts an MLArray (including nested ones) into native arrays so it can be compared with toEqual */
 const plain = (value: unknown) => JSON.parse(JSON.stringify(value))
 
 describe('MLArray', () => {

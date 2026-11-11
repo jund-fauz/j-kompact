@@ -3,8 +3,8 @@ import { initObject, isObject, MLObject } from "./Object.ts";
 import { isString } from "./String.ts";
 
 /**
- * Melakukan trim string secara menyeluruh, baik untuk string bisa, Array of String, maupun Object dengan value berupa string.
- * Data Array / Object campuran didukung dan akan melakukan trim pada string saja.
+ * Deeply trims strings: a plain string, an array of strings, or an object with string values.
+ * Mixed arrays / objects are supported; only the strings are trimmed.
  */
 export function trim<T>(value: T, options: { useJsObject?: boolean } = {}): T {
   const { useJsObject = false } = options

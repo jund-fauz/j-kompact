@@ -1,19 +1,19 @@
-import { initDate, isDate } from '../../Date.ts'
+import { initDate, isDate, type MLDate } from '../../Date.ts'
 import { between } from '../../Comparison.ts'
 
 /**
- * Convert tanggal dalam bentuk angka dari spreadsheet ke objek MLDate
+ * Converts a spreadsheet date serial number into an `MLDate`.
  */
-export function toMLDate(value: number) {
+export function toMLDate(value: number): MLDate {
   const date = initDate(Math.round((value - 25569) * 86400000))
   if (!isDate(date)) throw Error(`${value} bukanlah angka tanggal yang valid`)
   return date
 }
 
 /**
- * Cek apakah nilai yang diberikan merupakan rentang tahun yang valid (1999 - 2099)
+ * Checks whether a value is a valid year (1999 - 2099).
  */
-export function isYear(value: any) {
+export function isYear(value: any): boolean {
   value = Number(value)
   return !isNaN(value) && between(1999, value, 2099)
 }

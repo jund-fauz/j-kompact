@@ -7,11 +7,18 @@ import { log } from './Dynamic.ts'
 type CompareNumber = '<' | '<=' | '<=<' | '<<='
 type CompareParam<T> = Array<T| { logic: Logic }>
 
-export function isSame(...arr: any[]) {
+/**
+ * Checks whether all values are strictly equal (no different value).
+ */
+export function isSame(...arr: any[]): boolean {
   return new Set(flat(arr)).size === 1
 }
 
-export function sameWith<T>(value: T, ...arr: T[] | [{ withLog?: boolean, logic?: Logic }]) {
+/**
+ * Checks whether `value` equals the other values, using `And` (default) or `Or` logic.
+ * Objects are compared key by key.
+ */
+export function sameWith<T>(value: T, ...arr: T[] | [{ withLog?: boolean, logic?: Logic }]): boolean {
   const { withLog = true, logic = And } = getOptions(arr),
     flattenArr = arr.lazyFlat() as T[]
   if (withLog) {
@@ -27,13 +34,16 @@ export function sameWith<T>(value: T, ...arr: T[] | [{ withLog?: boolean, logic?
     : flattenArr.some(compare)
 }
 
-export function notSameWith(value: any, ...arr: any) {
+/**
+ * Checks whether `value` differs from all the other values.
+ */
+export function notSameWith(value: any, ...arr: any): boolean {
   return !flat(arr).includes(value)
 }
 
 /**
- * Mengecek apakah 'value' ada di antara 'start' sampai 'until'
- * Mendukung komparasi: '<', '<=', '<=<', '<<='
+ * Checks whether `value` is between `start` and `until`.
+ * Supported comparisons: '<', '<=', '<=<', '<<='
  */
 export function between(start: number, value: number | number[], until: number, compare: CompareNumber | CompareNumber[] = '<'): boolean {
   [start, until] = [start ?? 0, until ?? 0]
@@ -56,7 +66,10 @@ export function between(start: number, value: number | number[], until: number, 
   })
 }
 
-export function lowerThan(value: number, ...comparations: CompareParam<number>) {
+/**
+ * Checks whether `value` is lower than the other values, using `And` (default) or `Or` logic.
+ */
+export function lowerThan(value: number, ...comparations: CompareParam<number>): boolean {
   const { logic = And } = getOptions(comparations),
     isLowerThan = (comparation: number) => value < comparation
   return logic === And
@@ -65,7 +78,7 @@ export function lowerThan(value: number, ...comparations: CompareParam<number>) 
 }
 
 /**
- * Mengecek tipe data menggunakan "typeof" bawaan JavaScript untuk banyak variabel sekaligus
+ * Checks the `typeof` of many values at once, using `And` (default) or `Or` logic.
  */
 export function isTypeOf(type: string, ...array: CompareParam<any>): boolean {
   const { logic = And } = getOptions(array)

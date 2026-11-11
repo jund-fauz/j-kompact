@@ -1,12 +1,15 @@
+/**
+ * A boolean as a string, like a checkbox value in a spreadsheet.
+ */
 export type StringBoolean = 'TRUE' | 'FALSE'
 const stringBoolean = ['TRUE', 'FALSE'],
   reservedBoolean = ['FALSE', 'TRUE']
 
 /**
- * Melakukan negasi pada primitif boolean atau boolean pada string.
- * Contoh: 'TRUE' -> 'FALSE'
+ * Negates a primitive boolean or a string boolean.
+ * Example: 'TRUE' -> 'FALSE'
  */
-export function reverseBoolean(value: StringBoolean | boolean) {
+export function reverseBoolean(value: StringBoolean | boolean): string | boolean | undefined {
   switch (typeof value) {
     case 'boolean':
       return !value
@@ -17,6 +20,9 @@ export function reverseBoolean(value: StringBoolean | boolean) {
   }
 }
 
-export function ifTrue<T>(condition: boolean, value: T) {
+/**
+ * Returns `value` if `condition` is `true`, otherwise an empty string.
+ */
+export function ifTrue<T>(condition: boolean, value: T): T | '' {
   return condition ? value : ''
 }

@@ -1,7 +1,7 @@
 import { iterate } from "./Iteration.ts";
 
 /**
- * Membuat array berisi angka berurutan dari 'from' sampai 'until' (inklusif)
+ * Creates an array of consecutive numbers from `from` to `until` (inclusive).
  */
 export function range(from: number, until: number): number[] {
     if (until < from) {

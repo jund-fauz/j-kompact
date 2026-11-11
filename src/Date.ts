@@ -1,5 +1,5 @@
-import { initString } from './String.ts'
-import { initArray } from './Array.ts'
+import { initString, type MLString } from './String.ts'
+import { initArray, type MLArray } from './Array.ts'
 import { isObject } from './Object.ts'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc.js'
@@ -7,15 +7,23 @@ import tz from 'dayjs/plugin/timezone.js'
 
 declare var Utilities: any
 
-const shortMonths = initArray([
+type ShortMonth = 'JAN' | 'FEB' | 'MAR' | 'APR' | 'MEI' | 'JUN' | 'JUL' | 'AGS' | 'SEP' | 'OKT' | 'NOV' | 'DES'
+type LongMonth = 'JANUARI' | 'FEBRUARI' | 'MARET' | 'APRIL' | 'MEI' | 'JUNI' | 'JULI' | 'AGUSTUS' | 'SEPTEMBER' | 'OKTOBER' | 'NOVEMBER' | 'DESEMBER'
+
+const shortMonths: MLArray<ShortMonth> = initArray([
     'JAN', 'FEB', 'MAR', 'APR', 'MEI', 'JUN',
     'JUL', 'AGS', 'SEP', 'OKT', 'NOV', 'DES'
   ]),
-  longMonths = initArray([
+  longMonths: MLArray<LongMonth> = initArray([
     'JANUARI', 'FEBRUARI', 'MARET', 'APRIL', 'MEI', 'JUNI',
     'JULI', 'AGUSTUS', 'SEPTEMBER', 'OKTOBER', 'NOVEMBER', 'DESEMBER'
   ])
 
+/**
+ * A `Date` subclass with easier getters/setters (one-based month, Indonesian month
+ * names), chainable methods, and a timezone-aware `format`.
+ * Create an instance with `initDate`.
+ */
 export class MLDate extends Date {
   constructor(...values: number[] | [string | Date | MLDate | DateObject]) {
     super(...(values as [any, any?, any?]))
@@ -23,27 +31,27 @@ export class MLDate extends Date {
 
   /** Getter */
 
-  get miliseconds() {
+  get miliseconds(): number {
     return super.getMilliseconds()
   }
 
-  get seconds() {
+  get seconds(): number {
     return super.getSeconds()
   }
 
-  get minutes() {
+  get minutes(): number {
     return super.getMinutes()
   }
 
-  get hours() {
+  get hours(): number {
     return super.getHours()
   }
 
-  get date() {
+  get date(): number {
     return super.getDate()
   }
 
-  get lastDate() {
+  get lastDate(): number {
     return new Date(this.year, this.month, 0).getDate()
   }
 
@@ -51,15 +59,15 @@ export class MLDate extends Date {
     return this.getMonth() + 1
   }
 
-  get shortMonth() {
+  get shortMonth(): MLString {
     return initString(shortMonths.get(this.month))
   }
 
-  get longMonth() {
+  get longMonth(): MLString {
     return initString(longMonths.get(this.month))
   }
 
-  get year() {
+  get year(): number {
     return this.getFullYear()
   }
 
@@ -114,15 +122,15 @@ export class MLDate extends Date {
     return this
   }
 
-  lastMonth() {
+  lastMonth(): MLDate {
     return new MLDate(this.getTime()).setDate(1).setMonth(this.month - 1)
   }
 
-  nextMonth() {
+  nextMonth(): MLDate {
     return new MLDate(this.getTime()).setDate(1).setMonth(this.month + 1)
   }
 
-  format(format: string, timezone = 'Asia/Jakarta') {
+  format(format: string, timezone = 'Asia/Jakarta'): string {
     if (typeof Utilities !== 'undefined' && typeof Utilities.formatDate === 'function')
       return Utilities.formatDate(this, timezone, format)
     dayjs.extend(utc)
@@ -133,9 +141,21 @@ export class MLDate extends Date {
   }
 }
 
+/**
+ * Date object for `initDate`. Missing parts are filled from today.
+ */
 export type DateObject = { year?: number, month?: number | typeof longMonths[number] | typeof shortMonths[number], date?: number }
 
-export function initDate(...value: number[] | [string | Date | MLDate | DateObject]) {
+/**
+ * Creates an `MLDate` from `new Date(...)` arguments, a `Date` / `MLDate`, or a `DateObject`.
+ *
+ * @example
+ * ```ts
+ * initDate({ year: 2026, month: 'JULI', date: 1 })
+ * initDate(2026, 6, 1)
+ * ```
+ */
+export function initDate(...value: number[] | [string | Date | MLDate | DateObject]): MLDate {
   switch (true) {
     case isObject(value[0]):
       const today = new MLDate(),
@@ -161,9 +181,9 @@ export function initDate(...value: number[] | [string | Date | MLDate | DateObje
 }
 
 /**
- * Cek apakah string / objek Date adalah tanggal yang valid
+ * Checks whether a string or `Date` object is a valid date.
  */
-export function isDate(value: any) {
+export function isDate(value: any): boolean {
   if (value instanceof Date) return !isNaN(value.getTime())
   if (typeof value !== 'string' || /^[a-zA-Z]+[-_]\d+/.test(value)) return false
   const date = new Date(value)

@@ -1,9 +1,12 @@
 import { log, wait } from './Dynamic.ts'
 
+/**
+ * Return this from an `iterate` / `MLArray.iterate` callback to stop the loop.
+ */
 export const Break = 'BREAK'
 
 /**
- * Deklarasi perulangan for dengan formatDate seperti forEach
+ * A configurable `for` loop with a `forEach`-like callback.
  */
 export function iterate<T>(func: (no: number) => void | T, options: {
   from?: number,
@@ -11,7 +14,7 @@ export function iterate<T>(func: (no: number) => void | T, options: {
   untilBefore?: boolean,
   addition?: number,
   withReturnValue?: boolean
-} = {}) {
+} = {}): (void | T)[] | undefined {
   let { from = 1, until = 1, withReturnValue } = options
   if (from > until && until === 1)
     until = from
@@ -22,7 +25,7 @@ export function iterate<T>(func: (no: number) => void | T, options: {
     const returned = func(i)
     if (returned === Break)
       break
-    // Jika tidak dikonfigurasi, nilai kembalian dikumpulkan bila iterasi pertama mengembalikan nilai
+    // If not configured, return values are collected when the first iteration returns a value
     if (withReturnValue === undefined)
       withReturnValue = returned !== undefined
     if (withReturnValue)
@@ -33,8 +36,8 @@ export function iterate<T>(func: (no: number) => void | T, options: {
 }
 
 /**
- * Fungsi pemanggilan API dengan skema perulangan saat gagal.
- * Dapat disesuaikan jumlah percobaan dan durasi antar percobaannya.
+ * Calls a function and retries it when it fails, e.g. for API calls.
+ * The number of attempts and the delay between them are configurable.
  */
 export function retry<T>(func: () => void | T, options: {
   attempts?: number,

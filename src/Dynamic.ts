@@ -1,6 +1,6 @@
 /**
- * File ini berisikan fungsi2 yang akan dijalankan dinamis sesuai environtment-nya
- * Mendukung environtment Node.js dan Google Apps Script
+ * Functions that behave according to the runtime environment.
+ * Supports Node.js / Bun / Deno and Google Apps Script.
  */
 
 import { isObject, MLObject } from './Object.ts'
@@ -9,6 +9,9 @@ import { toString } from './String.ts'
 declare var Logger: any
 declare var Utilities: any
 
+/**
+ * Logs with `Logger.log` in Google Apps Script, or `console.log` elsewhere.
+ */
 export function log(...args: any[]) {
   if (typeof Logger !== 'undefined' && typeof Logger.log === 'function')
     Logger.log(
@@ -25,7 +28,10 @@ export function log(...args: any[]) {
 }
 
 /**
- * @param delay - In second
+ * Blocks execution for a number of seconds.
+ * Uses `Utilities.sleep` in Google Apps Script and `Atomics.wait` elsewhere.
+ *
+ * @param delay - Delay in seconds
  */
 export function wait(delay: number) {
   delay *= 1000

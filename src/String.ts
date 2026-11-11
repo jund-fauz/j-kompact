@@ -9,14 +9,17 @@ const
 type NormalizeMode = typeof Capitalize | typeof LowerCase | typeof UpperCase
 type Logic = typeof And | typeof Or
 
+/**
+ * A `String` subclass with helpers such as `toCamelCase`, `capitalize`, and multi-value `includes`. Create an instance with `initString`.
+ */
 export class MLString<T extends string = string> extends String {
   readonly _literalType!: T
 
-  toJSON() {
+  toJSON(): string {
     return this.toString()
   }
 
-  toCamelCase() {
+  toCamelCase(): MLString {
     return initString(
       this
         .toLowerCase()
@@ -26,7 +29,7 @@ export class MLString<T extends string = string> extends String {
     )
   }
 
-  normalizeFromCamelCase(mode: NormalizeMode = Capitalize) {
+  normalizeFromCamelCase(mode: NormalizeMode = Capitalize): MLString | '' {
     const result = this.replace(/[A-Z]/g, ' $&')
     switch (mode) {
       case Capitalize:
@@ -38,12 +41,12 @@ export class MLString<T extends string = string> extends String {
     }
   }
 
-  capitalize() {
+  capitalize(): MLString | '' {
     return this.length ? initString(this[0]!.toUpperCase() + this.slice(1).toLowerCase()) : ''
   }
 
   /**
-   * Mengecek apakah suatu teks ada di dalam teks-teks lain
+   * Checks whether the text includes the given values, using `And` (default) or `Or` logic.
    */
   override includes(...searchValues: string[] | { logic?: Logic }[]): boolean
 
@@ -58,7 +61,7 @@ export class MLString<T extends string = string> extends String {
       : searchValues.some(process)
   }
 
-  endWith(...searchValues: string[] | [{ logic?: Logic, caseInsensitive?: boolean }]) {
+  endWith(...searchValues: string[] | [{ logic?: Logic, caseInsensitive?: boolean }]): boolean {
     const { logic = And, caseInsensitive = false } = getOptions(searchValues),
       process = (searchValue: string) => caseInsensitive ? this.toLowerCase().endsWith(searchValue.toLowerCase()) : this.endsWith(searchValue)
     const flattenSearchValues = searchValues.lazyFlat() as string[]
@@ -67,21 +70,38 @@ export class MLString<T extends string = string> extends String {
       : flattenSearchValues.some(process)
   }
 
-  formatNumber(digitCount: number = 2) {
+  formatNumber(digitCount: number = 2): string {
     return this.padStart(digitCount, '0')
   }
 }
 
+/**
+ * Creates an `MLString` from a string or any value.
+ */
 export function initString<const T = string>(value: T): MLString<T extends string ? T : string> {
   return new MLString(value)
 }
 
+/**
+ * Converts a value into a JSON string (alias of `JSON.stringify`).
+ */
 export const toString = JSON.stringify
 
-export function isString(value: any) {
+/**
+ * Checks whether a value is a primitive string or a `String` / `MLString` object.
+ */
+export function isString(value: any): value is string | String {
   return typeof value === 'string' || value instanceof String
 }
 
-export function formatNumber(number: number, digitCount: number = 2) {
+/**
+ * Pads a number with leading zeros up to `digitCount` digits (default 2).
+ *
+ * @example
+ * ```ts
+ * formatNumber(7) // '07'
+ * ```
+ */
+export function formatNumber(number: number, digitCount: number = 2): string {
   return initString(number).formatNumber(digitCount)
 }
