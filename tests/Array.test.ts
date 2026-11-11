@@ -146,31 +146,43 @@ describe('MLArray', () => {
     })
 
     describe('push', () => {
+      it('should behave like the native push and return the new length', () => {
+        const array = initArray<any>([1])
+        expect(array.push(2, [3])).toBe(3)
+        expect([...array]).toEqual([1, 2, [3]])
+      })
+    })
+
+    describe('flatPush', () => {
       it('should push values and return the MLArray itself for chaining', () => {
         const array = initArray<number>([1])
-        const result = array.push(2, 3)
+        const result = array.flatPush(2, 3)
         expect(result).toBe(array)
         expect([...array]).toEqual([1, 2, 3])
+      })
+
+      it('should flatten the nested values before pushing', () => {
+        expect([...initArray<any>([1]).flatPush([2, [3]], 4)]).toEqual([1, 2, 3, 4])
       })
     })
 
     describe('filter', () => {
-      it('should filter in-place (mutable)', () => {
+      it('should return a new MLArray and keep the original untouched (immutable)', () => {
         const array = initArray([1, 2, 3, 4])
         const result = array.filter(value => value % 2 === 0)
-        expect(result).toBe(array)
-        expect([...array]).toEqual([2, 4])
-      })
-    })
-
-    describe('immutableFilter', () => {
-      it('should return a new MLArray and keep the original untouched', () => {
-        const array = initArray([1, 2, 3, 4])
-        const result = array.immutableFilter(value => value % 2 === 0)
         expect(result).toBeInstanceOf(MLArray)
         expect(result).not.toBe(array)
         expect([...result]).toEqual([2, 4])
         expect([...array]).toEqual([1, 2, 3, 4])
+      })
+    })
+
+    describe('change', () => {
+      it('should filter in-place (mutable) and return the MLArray itself', () => {
+        const array = initArray([1, 2, 3, 4])
+        const result = array.change(value => value % 2 === 0)
+        expect(result).toBe(array)
+        expect([...array]).toEqual([2, 4])
       })
     })
 
