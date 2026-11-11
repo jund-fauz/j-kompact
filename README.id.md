@@ -220,6 +220,11 @@ bun run build   # kompilasi ke dist/
 
 Riwayat rilis ada di [CHANGELOG.md](./CHANGELOG.md).
 
+## Bantuan AI
+
+Projek ini dikembangkan dengan bantuan AI (untuk tes, dokumentasi, dan beberapa
+perbaikan bug). Semua perubahan ditinjau dan dikelola oleh penulis.
+
 ## Lisensi
 
 [MPL-2.0](./LICENSE)

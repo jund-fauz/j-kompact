@@ -217,6 +217,11 @@ bun run build   # compile to dist/
 
 See [CHANGELOG.md](./CHANGELOG.md) for the release history.
 
+## AI assistance
+
+This project is developed with the help of AI tools (for tests, documentation, and
+some bug fixes). All changes are reviewed and maintained by the author.
+
 ## License
 
 [MPL-2.0](./LICENSE)
