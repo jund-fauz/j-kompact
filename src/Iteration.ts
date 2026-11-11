@@ -12,18 +12,21 @@ export function iterate<T>(func: (no: number) => void | T, options: {
   addition?: number,
   withReturnValue?: boolean
 } = {}) {
-  let { from = 1, until = 1 } = options
+  let { from = 1, until = 1, withReturnValue } = options
   if (from > until && until === 1)
     until = from
-  const { untilBefore = false, addition = 1, withReturnValue = func((from += addition) - addition) } = options,
-    result = [withReturnValue]
-  if (withReturnValue === Break) return
-  for (let i = from; i <= (until - +untilBefore); i += addition) {
+  const { untilBefore = false, addition = 1 } = options,
+    end = until - +untilBefore,
+    result: (void | T)[] = []
+  for (let i = from; i <= end; i += addition) {
     const returned = func(i)
-    if (withReturnValue)
-      result.push(returned)
     if (returned === Break)
       break
+    // Jika tidak dikonfigurasi, nilai kembalian dikumpulkan bila iterasi pertama mengembalikan nilai
+    if (withReturnValue === undefined)
+      withReturnValue = returned !== undefined
+    if (withReturnValue)
+      result.push(returned)
   }
   if (withReturnValue)
     return result

@@ -181,7 +181,7 @@ export class MLArray<T> extends Array<T> {
       : index > 0
         ? this[index - +!defaultIndex]
         : this.at(index)
-    return flattenAt.length > 2 ? flattenAt.map(process) : process(flattenAt[0] as number)
+    return flattenAt.length > 1 ? flattenAt.map(process) : process(flattenAt[0] as number)
   }
 
   addAfter(at: number, ...data: T[]) {
@@ -222,7 +222,7 @@ export class MLArray<T> extends Array<T> {
       } else if (isSame && firstRow == null)
         firstRow = currentRow
     })
-    if (firstRow) rows.push([firstRow, currentRow])
+    if (firstRow != null) rows.push([firstRow, currentRow])
     return rows
   }
 
@@ -304,14 +304,13 @@ export class MLArray<T> extends Array<T> {
   }
 
   sum() {
-    let decimalNum = 0,
-      numbers: MLArray<T> = this
-    if (numbers.isTypeOf('string')) {
-      decimalNum = this.map((val: string) => val.split('.')[1]?.length).unique()[0] ?? 0
-      numbers = numbers.map((val: string) => val.replace('.', ''))
+    if (this.isTypeOf('string')) {
+      // Dijumlahkan dalam bentuk bilangan bulat agar terhindar dari galat floating point (0.1 + 0.2)
+      const strings = this as unknown as MLArray<string>,
+        scale = 10 ** Math.max(0, ...strings.map(val => String(val).split('.')[1]?.length ?? 0))
+      return strings.reduce((total, val) => total + Math.round(Number(val) * scale), 0) / scale
     }
-    const result = numbers.reduce((total, num) => total + (typeof num === 'number' ? num : Number(num)), 0)
-    return result / (10 ** decimalNum)
+    return this.reduce((total, num) => total + Number(num), 0)
   }
 
   subtract(options: { positive?: boolean } = {}) {
