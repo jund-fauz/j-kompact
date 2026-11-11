@@ -72,7 +72,7 @@ export class MLObject<T> {
   }
 
   filter(func: mlObjectCallbackFunction<T, boolean>) {
-    return MLObject.fromEntries(this.entries.immutableFilter(([key, value]: any) => func(key, value)) as MLArray<[string, T]>)
+    return MLObject.fromEntries(this.entries.filter(([key, value]: any) => func(key, value)) as MLArray<[string, T]>)
   }
 
   /**
