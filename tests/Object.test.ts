@@ -122,6 +122,13 @@ describe('MLObject', () => {
       ])('should convert based on the given type', ([object, type, expected]) => {
         expect((object as MLObject<any>).convertValueAs(type as typeof mlObject || typeof mlArray)).toEqual(initObject(expected as Record<string, string>))
       })
+
+      it('should log and return the same MLObject if the given type is invalid', () => {
+        const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
+        expect(mockMlObject.convertValueAs('Unknown' as typeof mlArray)).toBe(mockMlObject)
+        expect(logSpy).toHaveBeenCalledWith('Invalid type: Unknown')
+        logSpy.mockRestore()
+      })
     })
   })
 })

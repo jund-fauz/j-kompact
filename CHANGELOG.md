@@ -10,6 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Error and log messages are now in English:
+  - `MLArray.slice`: `Start / end must not be 0`
+  - `reverseBoolean`: `Invalid boolean string: <value>. Expected 'TRUE' or 'FALSE'`
+  - `toMLDate`: `<value> is not a valid spreadsheet date number`
+  - `MLObject.convertValueAs`: logs `Invalid type: <type>`
+- The debug log of `MLArray.search` now shows `Function Name: search` (was `getIndexes`).
+
 ## [0.3.1] - 2026-11-12
 
 ### Added

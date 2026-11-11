@@ -27,6 +27,6 @@ describe('toMLDate', () => {
   })
 
   it.for([NaN, value1])('should throw if the given value (%s) is not a valid date number', (param) => {
-    expect(() => toMLDate(param as number)).toThrow(`${param} bukanlah angka tanggal yang valid`)
+    expect(() => toMLDate(param as number)).toThrow(`${param} is not a valid spreadsheet date number`)
   })
 })

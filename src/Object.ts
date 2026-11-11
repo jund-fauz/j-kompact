@@ -136,7 +136,7 @@ export class MLObject<T> {
       case mlObject:
         return this.reEntries((key, value) => [key, initObject(value as Record<string, T>)])
       default:
-        log(`Tipe ${type} tidak valid`)
+        log(`Invalid type: ${type}`)
         return this
     }
   }

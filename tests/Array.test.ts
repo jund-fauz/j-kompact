@@ -129,8 +129,8 @@ describe('MLArray', () => {
       })
 
       it('should throw if start or end is 0', () => {
-        expect(() => initArray([1, 2, 3], quiet).slice(0)).toThrow('Start / end tidak boleh 0')
-        expect(() => initArray([1, 2, 3], quiet).slice(1, 0)).toThrow('Start / end tidak boleh 0')
+        expect(() => initArray([1, 2, 3], quiet).slice(0)).toThrow('Start / end must not be 0')
+        expect(() => initArray([1, 2, 3], quiet).slice(1, 0)).toThrow('Start / end must not be 0')
       })
     })
 

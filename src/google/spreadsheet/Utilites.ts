@@ -6,7 +6,7 @@ import { between } from '../../Comparison.ts'
  */
 export function toMLDate(value: number): MLDate {
   const date = initDate(Math.round((value - 25569) * 86400000))
-  if (!isDate(date)) throw Error(`${value} bukanlah angka tanggal yang valid`)
+  if (!isDate(date)) throw Error(`${value} is not a valid spreadsheet date number`)
   return date
 }
 

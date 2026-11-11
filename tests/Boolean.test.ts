@@ -13,7 +13,7 @@ describe('reverseBoolean', () => {
   })
 
   it('should throw if the given string is not a valid boolean string', () => {
-    expect(() => reverseBoolean('true' as StringBoolean)).toThrow('Value tidak valid.')
+    expect(() => reverseBoolean('true' as StringBoolean)).toThrow("Invalid boolean string: true. Expected 'TRUE' or 'FALSE'")
   })
 })
 

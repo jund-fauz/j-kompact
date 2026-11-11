@@ -15,7 +15,7 @@ export function reverseBoolean(value: StringBoolean | boolean): string | boolean
       return !value
     case 'string':
       if (!stringBoolean.includes(value))
-        throw Error('Value tidak valid.')
+        throw Error(`Invalid boolean string: ${value}. Expected 'TRUE' or 'FALSE'`)
       return reservedBoolean[stringBoolean.indexOf(value)]
   }
 }

@@ -127,7 +127,7 @@ export class MLArray<T> extends Array<T> {
 
     override slice(start: number, end: number | null = null): MLArray<T> | T[] {
         if (sameWith(0, start, end, { logic: Or, withLog: this.withLog }))
-            throw Error('Start / end tidak boleh 0')
+            throw Error('Start / end must not be 0')
         if (start >= 1)
             start = start - 1
         return (end != null ? super.slice(start, end) : super.slice(start))
@@ -226,7 +226,7 @@ export class MLArray<T> extends Array<T> {
         const { plus = 0 } = options
         let rows: Array<Array<number>> = [], firstRow: number | null = null, currentRow: number = 0
         if (this.withLog) {
-            log(`Function Name: getIndexes`)
+            log(`Function Name: search`)
             log(`Search Value: ${JSON.stringify(search)}`)
             log(`Values: ${this}`)
             log(`Index Plus: ${plus}`)
