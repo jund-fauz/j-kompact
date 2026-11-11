@@ -248,12 +248,11 @@ library.
 git clone https://github.com/jund-fauz/j-kompact.git
 cd j-kompact
 bun install      # install dependencies
-bun run test     # run the test suite (Vitest)
-bun run build    # check that the TypeScript compiles (output goes to dist/)
+bun run test       # run the test suite (Vitest)
+bun run typecheck  # check types in src/ and tests/
 ```
 
-JSR publishes the TypeScript source in `src/` directly, so `dist/` is not part of
-the release.
+JSR publishes the TypeScript source in `src/` directly, so there is no build step.
 
 ### Releasing
 
@@ -266,8 +265,8 @@ the release.
    git push origin main v1.2.3
    ```
 
-3. GitHub Actions checks that the tag matches both versions, runs the tests, and
-   publishes to JSR with provenance.
+3. GitHub Actions checks that the tag matches both versions, runs the type check
+   and the tests, and publishes to JSR with provenance.
 
 See [CHANGELOG.md](./CHANGELOG.md) for the release history.
 

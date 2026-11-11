@@ -252,12 +252,12 @@ membutuhkannya jika hanya ingin memakai library ini.
 git clone https://github.com/jund-fauz/j-kompact.git
 cd j-kompact
 bun install      # instal dependency
-bun run test     # jalankan tes (Vitest)
-bun run build    # cek kompilasi TypeScript (hasilnya di dist/)
+bun run test       # jalankan tes (Vitest)
+bun run typecheck  # cek tipe di src/ dan tests/
 ```
 
-JSR mempublikasikan source TypeScript di `src/` secara langsung, jadi `dist/`
-tidak ikut dirilis.
+JSR mempublikasikan source TypeScript di `src/` secara langsung, jadi tidak ada
+langkah build.
 
 ### Merilis versi baru
 
@@ -271,7 +271,7 @@ tidak ikut dirilis.
    ```
 
 3. GitHub Actions akan mengecek kecocokan tag dengan kedua versi, menjalankan
-   tes, lalu mempublikasikan ke JSR dengan provenance.
+   pengecekan tipe dan tes, lalu mempublikasikan ke JSR dengan provenance.
 
 Riwayat rilis ada di [CHANGELOG.md](./CHANGELOG.md).
 
