@@ -1,0 +1,9 @@
+{
+  "name": "@jund-fauz/j-kompact",
+  "version": "0.3.0",
+  "license": "MPL-2.0",
+  "exports": "./src/index.ts",
+  "publish": {
+    "include": ["src/**/*.ts", "global.d.ts", "README.md", "README.id.md", "CHANGELOG.md", "LICENSE"]
+  }
+}

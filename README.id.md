@@ -18,17 +18,23 @@ ditambah helper kecil untuk perbandingan, perulangan, dan logging. Bisa dipakai 
 
 ## Instalasi
 
-```bash
-npm install j-kompact
-# atau
-bun add j-kompact
-```
+Paket ini dipublikasikan di [JSR](https://jsr.io/@jund-fauz/j-kompact):
 
-Paket ini hanya mendukung ESM.
+```bash
+npx jsr add @jund-fauz/j-kompact   # npm
+bunx jsr add @jund-fauz/j-kompact  # Bun
+deno add jsr:@jund-fauz/j-kompact  # Deno
+```
 
 ```ts
-import { initArray, initObject, initString, initDate } from 'j-kompact'
+import { initArray, initObject, initString, initDate } from '@jund-fauz/j-kompact'
 ```
+
+> Paket `j-kompact` di npm masih di versi lama `1.0.x` dan belum mendapat rilis
+> `0.x`. Untuk sementara gunakan JSR. Contoh-contoh di bawah meng-import dari
+> `'j-kompact'`; ganti dengan `'@jund-fauz/j-kompact'` jika menginstal dari JSR.
+
+Paket ini hanya mendukung ESM.
 
 Saat paket di-import, dua method juga ditambahkan ke `Array.prototype`:
 `asMLArray()` dan `lazyFlat()`. Di kode TypeScript, sebaiknya gunakan
@@ -54,8 +60,9 @@ list.sort(Descending)    // MLArray [4, 3, 2, 1]
 list.sum()               // 10
 list.minMax()            // [1, 4]
 
-initArray(['a', 'b', 'c']).readableJoin()                // 'a, b dan c'
-initArray(['a', 'b', 'c']).readableJoin({ and: 'atau' }) // 'a, b atau c'
+initArray(['a', 'b', 'c']).readableJoin()                // 'a, b, dan c'
+initArray(['a', 'b', 'c']).readableJoin({ and: 'atau' }) // 'a, b, atau c'
+initArray(['a', 'b']).readableJoin()                     // 'a dan b'
 
 initArray([1, 1, 2, null]).unique()                      // MLArray [1, 2]
 initArray([1, 2, 3, 4]).filter(n => n % 2 === 0)         // MLArray baru: [2, 4] (seperti bawaan)

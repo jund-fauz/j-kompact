@@ -1,6 +1,6 @@
 {
   "name": "j-kompact",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A utility library to manipulate data in js/ts based application",
   "author": "Jundi",
   "license": "MPL-2.0",

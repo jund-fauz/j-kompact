@@ -10,6 +10,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-11-12
+
+### Added
+
+- Published on JSR as [`@jund-fauz/j-kompact`](https://jsr.io/@jund-fauz/j-kompact)
+  (`jsr.json`). Releases `0.1.0` and `0.2.0` were published there as well.
+
+### Changed
+
+- **Breaking:** `MLArray.readableJoin` now puts the separator before the last
+  conjunction when there are three or more items (`'a, b, dan c'` instead of
+  `'a, b dan c'`). Two items are still joined without a separator (`'a dan b'`).
+
 ## [0.2.0] - 2026-11-12
 
 ### Added
@@ -100,6 +113,7 @@ First release of the restarted version line.
 - `MLArray.sum` on numeric strings with different decimal lengths (for example
   `['1.5', '2.25']`) now returns the correct total.
 
-[Unreleased]: https://github.com/jund-fauz/j-kompact/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/jund-fauz/j-kompact/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/jund-fauz/j-kompact/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/jund-fauz/j-kompact/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/jund-fauz/j-kompact/releases/tag/v0.1.0

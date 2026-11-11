@@ -16,17 +16,23 @@ for comparison, iteration, and logging, and it runs in both **Node.js / Bun** an
 
 ## Installation
 
-```bash
-npm install j-kompact
-# or
-bun add j-kompact
-```
+The package is published on [JSR](https://jsr.io/@jund-fauz/j-kompact):
 
-The package is ESM-only.
+```bash
+npx jsr add @jund-fauz/j-kompact   # npm
+bunx jsr add @jund-fauz/j-kompact  # Bun
+deno add jsr:@jund-fauz/j-kompact  # Deno
+```
 
 ```ts
-import { initArray, initObject, initString, initDate } from 'j-kompact'
+import { initArray, initObject, initString, initDate } from '@jund-fauz/j-kompact'
 ```
+
+> The `j-kompact` package on npm is still at the old `1.0.x` line and does not
+> have the `0.x` releases yet. Use JSR for now. The examples below import from
+> `'j-kompact'`; replace it with `'@jund-fauz/j-kompact'` when installing from JSR.
+
+The package is ESM-only.
 
 Importing the package also adds two methods to `Array.prototype` at runtime:
 `asMLArray()` and `lazyFlat()`. In TypeScript code, prefer `initArray(array)`,
@@ -52,8 +58,9 @@ list.sort(Descending)    // MLArray [4, 3, 2, 1]
 list.sum()               // 10
 list.minMax()            // [1, 4]
 
-initArray(['a', 'b', 'c']).readableJoin()                // 'a, b dan c'
-initArray(['a', 'b', 'c']).readableJoin({ and: 'and' })  // 'a, b and c'
+initArray(['a', 'b', 'c']).readableJoin()                // 'a, b, dan c'
+initArray(['a', 'b', 'c']).readableJoin({ and: 'and' })  // 'a, b, and c'
+initArray(['a', 'b']).readableJoin()                     // 'a dan b'
 
 initArray([1, 1, 2, null]).unique()                      // MLArray [1, 2]
 initArray([1, 2, 3, 4]).filter(n => n % 2 === 0)         // new MLArray: [2, 4] (native behavior)
